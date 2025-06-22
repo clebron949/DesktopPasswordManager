@@ -21,7 +21,10 @@ export default interface API {
       password: Partial<Omit<Password, "Id" | "OnCreated" | "OnModified">>
     ): Promise<void>;
     deletePassword(id: number): Promise<void>;
-  }
+  },
+  app: {
+    getVersion(): Promise<string>;
+  };
 }
 
 declare global {

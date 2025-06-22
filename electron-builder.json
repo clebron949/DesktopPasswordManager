@@ -1,39 +1,56 @@
 {
-    "appId": "com.electron.app",
+    "appId": "com.gotyoursoftware.passwordmanager",
+    "productName": "Password Manager",
+    "copyright": "Copyright © 2025 Got Your Software, LLC",
     "directories": {
-        "output": "dist"
+        "output": "release"
     },
-
     "nsis": {
         "oneClick": false,
         "perMachine": false,
         "allowToChangeInstallationDirectory": true,
-        "shortcutName": "Electron App"
+        "createDesktopShortcut": true,
+        "createStartMenuShortcut": true,
+        "shortcutName": "Password Manager"
     },
     "win": {
-        "target": "nsis"
+        "target": "nsis",
+        "icon": "src/main/static/favicon.ico",
+        "publisherName": "Got Your Software, LLC"
     },
-    "linux":  {
-        "target": ["snap"]
+    "linux": {
+        "target": [
+            "snap"
+        ]
     },
     "files": [
         {
             "from": "build/main",
             "to": "main",
-            "filter": ["**/*"]
+            "filter": [
+                "**/*"
+            ]
         },
         {
             "from": "build/renderer",
             "to": "renderer",
-            "filter": ["**/*"]
+            "filter": [
+                "**/*"
+            ]
         },
         {
             "from": "src/main/static",
             "to": "static",
-            "filter": ["**/*"]
+            "filter": [
+                "**/*"
+            ]
         },
-	"!build",
-	"!dist",
-	"!scripts"
+        "!build",
+        "!dist",
+        "!scripts",
+        "!release",
+        "!docs",
+        "!src",
+        "!.git"
     ]
 }
