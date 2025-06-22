@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import PassboltLogo from "./assets/passbolt.svg";
+window.api.app.getVersion().then(version => {
+  document.title = `Password Manager v${version}`;
+});
 </script>
 
 <template>

@@ -1,44 +1,9 @@
 {
   "name": "password-manager",
-  "version": "0.1.0",
-  "description": "Desktop password manager application to securely store and manage your passwords.",
-  "author": "Got Your Software <contact@gotyoursoftware.com>",
-  "main": "build/main/main.js",
-  "build": {
-    "appId": "com.gotyoursoftware.passwordmanager",
-    "productName": "Password Manager",
-    "copyright": "Copyright © 2025 Got Your Software",
-    "directories": {
-      "output": "release"
-    },
-    "files": [
-      "build/main/**/*",
-      "node_modules/**/*",
-      "!node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
-      "!node_modules/*/{test,__tests__,tests,powered-test,example,examples}",
-      "!node_modules/*.d.ts",
-      "!node_modules/.bin",
-      "!**/*.{iml,o,hprof,orig,pyc,pyo,rbc,swp,csproj,sln,xproj}",
-      "!**/*.map",
-      {
-        "from": "build/renderer",
-        "to": "renderer",
-        "filter": ["**/*"]
-      }
-    ],
-    "win": {
-      "icon": "src/main/static/favicon.ico",
-      "target": "nsis",
-      "publisherName": "Got Your Software"
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true,
-      "shortcutName": "Password Manager"
-    }
-  },
+  "version": "0.1.2",
+  "description": "Password Manager",
+  "author": "Got Your Software, LLC <gys@gotyoursoftware.com>",
+  "main": "main/main.js",
   "scripts": {
     "dev": "node scripts/dev-server.js",
     "build": "node scripts/build.js && electron-builder",

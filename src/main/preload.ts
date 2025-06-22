@@ -23,5 +23,8 @@ contextBridge.exposeInMainWorld("api", {
       ipcRenderer.invoke("database:updatePassword", id, password),
     deletePassword: (id: number): Promise<void> =>
       ipcRenderer.invoke("database:deletePassword", id),
-  }
+  },
+  app: {
+    getVersion: (): Promise<string> => ipcRenderer.invoke("get-app-version"),
+  },
 });

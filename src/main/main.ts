@@ -5,6 +5,7 @@ import { registerSettingsHandlers } from "./ipc/SettingsHandlers";
 import { registerDatabaseHandlers } from "./ipc/DatabaseHandler";
 import { createMenu } from "./middlewares/ApplicationMenu";
 import { createDatabaseRepository } from "./middlewares/DatabaseRepositoryFactory";
+import { registerAppInfoHandlers } from "./ipc/AppInfoHandler";
 
 console.log(app.getAppPath())
 const basePath = join(app.getPath("userData"), "storage");
@@ -37,6 +38,7 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+  registerAppInfoHandlers();
   registerSettingsHandlers();
   registerDatabaseHandlers(db);
   createMenu(db);
