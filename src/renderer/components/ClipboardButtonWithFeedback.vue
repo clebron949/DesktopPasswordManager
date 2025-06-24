@@ -17,7 +17,7 @@ interface ClipboardButtonProps {
 
 const props = withDefaults(defineProps<ClipboardButtonProps>(), {
   buttonClass:
-    "ms-3 p-2 bg-[#005185] text-white rounded-md hover:bg-[#003a60] focus:outline-none focus:ring-2 focus:ring-[#005185] focus:ring-offset-2 transition duration-200",
+    "ms-3 px-2 py-2 bg-[#005185] text-white rounded-md hover:bg-[#003a60] focus:outline-none focus:ring-2 focus:ring-[#005185] focus:ring-offset-2 transition duration-200",
   ariaLabel: "Copy to clipboard",
   buttonTitle: "Copy to clipboard",
   isDisabled: false,
@@ -79,7 +79,7 @@ defineExpose({
     >
       <slot>
         <!-- Default slot content if nothing is passed -->
-        <ClipboardIcon class-name="size-5" />
+        <ClipboardIcon class-name="size-3" />
       </slot>
     </button>
 

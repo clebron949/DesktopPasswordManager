@@ -76,15 +76,15 @@ const prevPage = () => {
   >
     <!-- Left Section: Showing X to Y of Z results -->
     <div class="flex-1 hidden sm:block">
-      <p class="text-sm text-tertiary">
+      <p class="text-xs text-tertiary">
         Showing
-        <span class="font-medium">
+        <span class="text-xs font-medium">
           {{
             itemsPerPage === length ? 1 : (currentPage - 1) * itemsPerPage + 1
           }}
         </span>
         to
-        <span class="font-medium">
+        <span class="text-xs font-medium">
           {{
             itemsPerPage === length
               ? length
@@ -92,7 +92,7 @@ const prevPage = () => {
           }}
         </span>
         of
-        <span class="font-medium">{{ length }}</span>
+        <span class="text-xs font-medium">{{ length }}</span>
         results
       </p>
     </div>
@@ -101,13 +101,13 @@ const prevPage = () => {
     <div class="flex items-center justify-center flex-1">
       <label
         for="items-per-page"
-        class="text-sm text-tertiary mr-2 whitespace-nowrap"
+        class="text-xs text-tertiary mr-2 whitespace-nowrap"
         >Show</label
       >
       <select
         id="items-per-page"
         v-model.number="itemsPerPage"
-        class="block max-w-[80px] appearance-none rounded-md border border-gray-300 bg-white py-1.5 pl-3 pr-8 text-sm font-medium text-secondary shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-primary sm:leading-6"
+        class="block max-w-[80px] appearance-none rounded-md border border-gray-300 bg-white py-0.5 pl-3 pr-8 text-xs font-medium text-secondary shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-primary sm:leading-6"
         style="
           background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22 fill=%22%236B7A8B%22%3E%3Cpath fill-rule=%22evenodd%22 d=%22M5.22 8.22a.75.75 0 011.06 0L10 11.94l3.72-3.72a.75.75 0 111.06 1.06l-4.25 4.25a.75.75 0 01-1.06 0L5.22 9.28a.75.75 0 010-1.06z%22 clip-rule=%22evenodd%22 /%3E%3C/svg%3E');
           background-position: right 0.5rem center;
@@ -120,7 +120,7 @@ const prevPage = () => {
           {{ option === length ? "All" : option }}
         </option>
       </select>
-      <span class="text-sm text-tertiary ml-2 whitespace-nowrap">per page</span>
+      <span class="text-xs text-tertiary ml-2 whitespace-nowrap">per page</span>
     </div>
 
     <!-- Right Section: Page navigation buttons -->
@@ -128,14 +128,14 @@ const prevPage = () => {
       <button
         @click="prevPage"
         :disabled="currentPage === 1 || itemsPerPage === length"
-        class="relative inline-flex items-center rounded-md border border-tertiary/50 bg-white px-4 py-2 text-sm font-medium text-tertiary hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+        class="relative inline-flex items-center rounded-md border border-tertiary/50 bg-white px-3 py-1.5 text-xs font-medium text-tertiary hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         Previous
       </button>
       <button
         @click="nextPage"
         :disabled="currentPage === totalPages || itemsPerPage === length"
-        class="relative ml-3 inline-flex items-center rounded-md border border-tertiary/50 bg-white px-4 py-2 text-sm font-medium text-tertiary hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+        class="relative ml-3 inline-flex items-center rounded-md border border-tertiary/50 bg-white px-3 py-1.5 text-xs font-medium text-tertiary hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         Next
       </button>
@@ -149,7 +149,7 @@ const prevPage = () => {
       :key="page"
       @click="goToPage(page)"
       :class="[
-        'mx-1 px-3 py-1 rounded-md text-sm',
+        'mx-1 px-3 py-1 rounded-md text-xs',
         currentPage === page
           ? 'bg-primary text-white'
           : 'bg-gray-200 text-secondary hover:bg-gray-300',
