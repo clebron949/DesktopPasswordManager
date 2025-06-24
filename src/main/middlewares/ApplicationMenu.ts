@@ -1,5 +1,5 @@
 import { app, Menu } from "electron";
-import { handleFileImport } from "./importExport";
+import { handleFileExport, handleFileImport } from "./importExport";
 import { DatabaseRepository } from "../services/SQLiteService";
 
 export function createMenu(db: DatabaseRepository) {
@@ -13,33 +13,11 @@ export function createMenu(db: DatabaseRepository) {
             await handleFileImport(db);
           },
         },
-        { type: "separator" },
         {
           label: "Export",
-          submenu: [
-            {
-              label: "Export CSV...",
-              click: async () => {
-                // await handleExportCSV();
-              },
-            },
-            {
-              label: "Export JSON...",
-              click: async () => {
-                // await handleExportJSON();
-              },
-            },
-          ],
-        },
-        // add development tools
-        { type: "separator" },
-        {
-          label: "Toggle Developer Tools",
-          click: (item, focusedWindow) => {
-            if (focusedWindow) {
-              (focusedWindow as Electron.BrowserWindow).webContents.toggleDevTools();
-            }
-          },
+          click: async () => {
+            await handleFileExport(db);
+          }
         },
         { type: "separator" },
         {

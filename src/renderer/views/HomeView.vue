@@ -2,11 +2,12 @@
 import PasswordTable from "../components/PasswordTable.vue";
 import SearchIcon from "../assets/search.svg";
 import { usePasswordStore } from "../stores/PasswordStore";
-import { computed, ref, onMounted } from "vue";
+import { computed, ref, onMounted, onUnmounted } from "vue";
 import { Password } from "../typings/password";
 import TablePagination from "../components/TablePagination.vue";
 import { IpcService } from "../services/IpcService";
 import { useAppStore } from "../stores/appSettingsStore";
+import { ImportCompletedData } from "../typings/imports";
 
 const passwordStore = usePasswordStore();
 const appStore = useAppStore();
@@ -24,6 +25,17 @@ onMounted(async () => {
   if (settings) {
     itemsPerPage.value = settings.itemsPerPage;
   }
+  window.api.import.onCompleted(async (e: ImportCompletedData) => {
+    passwordStore.initializePasswords().then(() => {
+      if (passwordStore.passwords) {
+        passwords.value = passwordStore.passwords;
+      }
+    });
+  });
+});
+
+onUnmounted(() => {
+  window.api.import.removeAllListeners();
 });
 
 const filteredPasswords = computed(() => {
