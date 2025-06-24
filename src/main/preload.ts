@@ -27,4 +27,12 @@ contextBridge.exposeInMainWorld("api", {
   app: {
     getVersion: (): Promise<string> => ipcRenderer.invoke("get-app-version"),
   },
+   import: {
+    onCompleted: (callback: (data: any) => void) => {
+      ipcRenderer.on('import-completed', (event, data) => callback(data));
+    },
+    removeAllListeners: () => {
+      ipcRenderer.removeAllListeners('import-completed');
+    }
+  }
 });

@@ -1,4 +1,5 @@
 import { AppSettings } from "../../main/services/LocalStorageService";
+import { ImportCompletedData } from "./imports";
 import { Password } from "./password";
 
 /**
@@ -24,6 +25,10 @@ export default interface API {
   },
   app: {
     getVersion(): Promise<string>;
+  };
+   import: {
+    onCompleted: (callback: (data: ImportCompletedData) => void) => void;
+    removeAllListeners: () => void;
   };
 }
 

@@ -10,6 +10,7 @@ import { registerAppInfoHandlers } from "./ipc/AppInfoHandler";
 console.log(app.getAppPath())
 const basePath = join(app.getPath("userData"), "storage");
 const dbPath = join(basePath, "password-manager.db");
+console.log("Database path:", dbPath);
 const db = createDatabaseRepository("sqlite", dbPath);
 db.createDatabase();
 
