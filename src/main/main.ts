@@ -19,8 +19,8 @@ if (!existsSync(basePath)) {
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
-    width: 750,
-    height: 650,
+    width: 700,
+    height: 580,
     webPreferences: {
       preload: join(__dirname, "preload.js"),
       nodeIntegration: false,

@@ -96,7 +96,7 @@ const passwordStrength = computed(() => {
     class="font-sans max-w-md mx-auto p-8 border border-gray-200 rounded-xl shadow-lg bg-white text-gray-800"
   >
     <h2
-      class="text-center text-2xl font-extrabold text-[#005185] mb-8 tracking-wide"
+      class="text-center text-xl font-extrabold text-[#005185] mb-8 tracking-wide"
     >
       Password Generator
     </h2>
@@ -104,7 +104,7 @@ const passwordStrength = computed(() => {
     <div class="mb-6 relative flex items-end">
       <div class="flex-grow">
         <!-- Input field for password -->
-        <label for="password-display" class="block text-md font-semibold mb-2">
+        <label for="password-display" class="block text-sm font-semibold mb-2">
           Generated Password:
         </label>
         <input
@@ -112,7 +112,7 @@ const passwordStrength = computed(() => {
           type="text"
           :value="password"
           readonly
-          class="w-full py-1.5 px-3 pr-12 text-md border border-gray-300 rounded-lg bg-gray-50 cursor-text shadow-sm focus:outline-none focus:ring-2 focus:ring-[#005185]"
+          class="w-full py-1.5 px-3 pr-12 text-sm border border-gray-300 rounded-lg bg-gray-50 cursor-text shadow-sm focus:outline-none focus:ring-2 focus:ring-[#005185]"
         />
       </div>
 

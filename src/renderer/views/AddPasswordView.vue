@@ -130,7 +130,7 @@ const handleCancelDelete = () => {
         class="flex items-center gap-1 font-medium text-sm text-gray-800 hover:text-gray-700"
       >
         <button title="Back">
-          <LeftArrowIcon class-name="size-6" />
+          <LeftArrowIcon class-name="size-4" />
         </button>
       </RouterLink>
 
@@ -151,7 +151,7 @@ const handleCancelDelete = () => {
               title="Delete Password"
               class="p-2 bg-gray-100 rounded-md hover:bg-gray-200"
             >
-              <DeleteIcon class="size-4 fill-red-600" />
+              <DeleteIcon class="w-4 h-auto fill-red-600" />
             </button>
           </div>
         </template>
@@ -166,7 +166,7 @@ const handleCancelDelete = () => {
     <div class="space-y-4">
       <!-- Name Field -->
       <div>
-        <label for="name" class="block text-sm/6 font-medium text-gray-900">
+        <label for="name" class="block text-xs font-medium text-gray-900">
           Name
         </label>
         <div class="mt-2 flex items-center">
@@ -175,7 +175,7 @@ const handleCancelDelete = () => {
             name="name"
             id="name"
             v-model="localPassword.Name"
-            class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-secondary sm:text-sm/6"
+            class="block w-full rounded-md bg-white px-3 py-2 text-xs text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-secondary"
           />
           <ClipboardButtonWithFeedback :text-to-copy="localPassword.Name" />
         </div>
@@ -183,7 +183,7 @@ const handleCancelDelete = () => {
 
       <!-- Username Field -->
       <div>
-        <label for="username" class="block text-sm/6 font-medium text-gray-900">
+        <label for="username" class="block text-xs font-medium text-gray-900">
           Username
         </label>
         <div class="mt-2 flex items-center">
@@ -192,7 +192,7 @@ const handleCancelDelete = () => {
             name="username"
             id="username"
             v-model="localPassword.Username"
-            class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-secondary sm:text-sm/6"
+            class="block w-full rounded-md bg-white px-3 py-2 text-xs text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-secondary"
           />
           <ClipboardButtonWithFeedback :text-to-copy="localPassword.Username" />
         </div>
@@ -200,7 +200,7 @@ const handleCancelDelete = () => {
 
       <!-- Password Field -->
       <div>
-        <label for="password" class="block text-sm/6 font-medium text-gray-900">
+        <label for="password" class="block text-xs font-medium text-gray-900">
           Password
         </label>
         <div class="mt-2 flex items-center">
@@ -209,7 +209,7 @@ const handleCancelDelete = () => {
             name="password"
             id="password"
             v-model="localPassword.Password"
-            class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-secondary sm:text-sm/6"
+            class="block w-full rounded-md bg-white px-3 py-2 text-xs text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-secondary"
           />
           <ClipboardButtonWithFeedback :text-to-copy="localPassword.Password" />
         </div>
@@ -217,7 +217,7 @@ const handleCancelDelete = () => {
 
       <!-- URL Field -->
       <div>
-        <label for="url" class="block text-sm/6 font-medium text-gray-900">
+        <label for="url" class="block text-xs font-medium text-gray-900">
           URL
         </label>
         <div class="mt-2 flex items-center">
@@ -226,7 +226,7 @@ const handleCancelDelete = () => {
             name="url"
             id="url"
             v-model="localPassword.Url"
-            class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-secondary sm:text-sm/6"
+            class="block w-full rounded-md bg-white px-3 py-2 text-xs text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-secondary"
           />
           <ClipboardButtonWithFeedback :text-to-copy="localPassword.Url" />
         </div>
@@ -236,7 +236,7 @@ const handleCancelDelete = () => {
         <button
           type="button"
           @click="handleSavePassword"
-          class="mt-6 rounded-md btn-primary px-6 py-2.5 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+          class="mt-6 rounded-md btn-primary px-3 py-2 text-xs font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
         >
           {{ localPassword.Id && localPassword.Id !== 0 ? 'Update' : 'Save' }}
         </button>

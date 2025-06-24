@@ -18,18 +18,18 @@ const getPasswordInitials = (name: string) => {
     <li v-for="password in passwords" :key="password.Id">
       <router-link
         :to="`/add-password/${password.Id}`"
-        class="flex items-center gap-x-6 px-3 py-4 cursor-pointer hover:bg-slate-100 hover:rounded-md"
+        class="flex items-center gap-x-6 px-3 py-3 cursor-pointer hover:bg-slate-100 hover:rounded-md"
       >
         <span
           class="inline-flex size-7 items-center justify-center rounded-full bg-gray-500"
         >
-          <span class="text-xs font-medium text-white">
+          <span class="text-[10px] font-medium text-white">
             {{ getPasswordInitials(password.Name) }}
           </span>
         </span>
-        <div class="flex justify-between flex-1">
-          <span class="overflow-hidden">{{ password.Name }}</span>
-          <ChevronRightIcon class="size-6" />
+        <div class="flex-1 flex justify-between">
+          <span class="overflow-hidden text-sm">{{ password.Name }}</span>
+          <ChevronRightIcon class="w-5" />
         </div>
       </router-link>
     </li>
