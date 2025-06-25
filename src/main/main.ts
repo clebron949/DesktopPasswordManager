@@ -27,7 +27,7 @@ function createWindow() {
       nodeIntegration: false,
       contextIsolation: true,
     },
-    icon: join(app.getAppPath(), "static", "passbolt.ico"),
+    icon: join(app.getAppPath(), "static", "favicon.ico"),
   });
 
   if (process.env.NODE_ENV === "development") {
