@@ -11,13 +11,13 @@ window.api.app.getVersion().then(version => {
       className="bg-white border-b-2 border-gray-200 shadow dark:bg-gray-900"
     >
       <div
-        className="max-w-screen-lg flex flex-wrap items-center justify-between mx-auto px-4 py-3"
+        className="max-w-screen-lg flex flex-wrap items-center justify-between mx-auto px-4 pt-2 pb-4"
       >
         <RouterLink
           to="/"
           class="flex items-center space-x-2 rtl:space-x-reverse"
         >
-          <img :src="PassboltLogo" alt="Passbolt Logo" className="w-6 h-auto" />
+          <img :src="PassboltLogo" alt="Passbolt Logo" className="w-8 h-auto" />
           <span
             className="self-center text-base font-semibold whitespace-nowrap dark:text-white text-black"
           >
