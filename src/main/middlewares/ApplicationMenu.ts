@@ -1,8 +1,11 @@
-import { app, Menu } from "electron";
+import { app, BrowserWindow, Menu } from "electron";
 import { handleFileExport, handleFileImport } from "./importExport";
 import { DatabaseRepository } from "../services/SQLiteService";
+import { join } from "path";
 
 export function createMenu(db: DatabaseRepository) {
+  // log current path
+  console.log("Current Path:", app.getAppPath());
   const template: Electron.MenuItemConstructorOptions[] = [
     {
       label: "File",
@@ -17,7 +20,7 @@ export function createMenu(db: DatabaseRepository) {
           label: "Export",
           click: async () => {
             await handleFileExport(db);
-          }
+          },
         },
         { type: "separator" },
         {
@@ -39,6 +42,21 @@ export function createMenu(db: DatabaseRepository) {
         { role: "cut" },
         { role: "copy" },
         { role: "paste" },
+      ],
+    },
+    {
+      label: "Database",
+      submenu: [
+        {
+          label: "Options",
+          icon: join(app.getAppPath(), "static", "settings.png"),
+          click: () => {
+            const mainWindow = BrowserWindow.getAllWindows()[0];
+            if (mainWindow && !mainWindow.isDestroyed()) {
+              mainWindow.webContents.send("navigate-to-db-options");
+            }
+          },
+        },
       ],
     },
   ];

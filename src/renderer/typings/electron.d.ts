@@ -30,6 +30,10 @@ export default interface API {
     onCompleted: (callback: (data: ImportCompletedData) => void) => void;
     removeAllListeners: () => void;
   };
+   navigation: {
+    onNavigateToDbOptions: (callback: () => void) => void;
+    removeNavigationListeners: () => void;
+  };
 }
 
 declare global {

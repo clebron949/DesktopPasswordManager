@@ -34,5 +34,13 @@ contextBridge.exposeInMainWorld("api", {
     removeAllListeners: () => {
       ipcRenderer.removeAllListeners('import-completed');
     }
+  },
+ navigation: {
+    onNavigateToDbOptions: (callback: () => void) => {
+      ipcRenderer.on('navigate-to-db-options', () => callback());
+    },
+    removeNavigationListeners: () => {
+      ipcRenderer.removeAllListeners('navigate-to-db-options');
+    }
   }
 });
