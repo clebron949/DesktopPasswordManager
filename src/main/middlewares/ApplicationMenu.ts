@@ -1,7 +1,30 @@
-import { app, BrowserWindow, Menu } from "electron";
+import { app, BrowserWindow, Menu, nativeImage } from "electron";
 import { handleFileExport, handleFileImport } from "./importExport";
 import { DatabaseRepository } from "../services/SQLiteService";
 import { join } from "path";
+import * as fs from "fs";
+
+function getMenuItemIcon(baseName) {
+  const img = nativeImage.createEmpty();
+  const icon1xPath = join(app.getAppPath(), 'static', `${baseName}.png`);
+  const icon2xPath = join(app.getAppPath(), 'static', `${baseName}@2x.png`);
+  if (fs.existsSync(icon1xPath)) {
+    console.log("Adding icon:", icon1xPath);
+    img.addRepresentation({
+      scaleFactor: 1.0,
+      buffer: fs.readFileSync(icon1xPath)
+    });
+  }
+  if (fs.existsSync(icon2xPath)) {
+    console.log("Adding icon:", icon2xPath);
+    img.addRepresentation({
+      scaleFactor: 2.0,
+      buffer: fs.readFileSync(icon2xPath)
+    });
+  }
+  // Add more resolutions as needed (e.g., 3.0 for @3x.png)
+  return img;
+}
 
 export function createMenu(db: DatabaseRepository) {
   // log current path
@@ -48,8 +71,16 @@ export function createMenu(db: DatabaseRepository) {
       label: "Database",
       submenu: [
         {
+          label: "Connect",
+          icon: getMenuItemIcon("database"),
+          click: () => {
+            console.log("Connect clicked");
+          },
+        },
+        { type: "separator" },
+        {
           label: "Options",
-          icon: join(app.getAppPath(), "static", "settings.png"),
+          icon: getMenuItemIcon("settings"),
           click: () => {
             const mainWindow = BrowserWindow.getAllWindows()[0];
             if (mainWindow && !mainWindow.isDestroyed()) {
