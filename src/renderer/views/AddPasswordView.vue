@@ -3,17 +3,18 @@ import { ref, watch, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import type { Password } from "../typings/password";
 import { usePasswordStore } from "../stores/PasswordStore";
-import ConfirmationModal from "../components/ConfirmationModal.vue";
+import DialogModal from "../components/modals/DialogModal.vue";
 import LeftArrowIcon from "../components/icons/LeftArrowIcon.vue";
 import DeleteIcon from "../components/icons/DeleteIcon.vue";
 import ClipboardButtonWithFeedback from "../components/ClipboardButtonWithFeedback.vue";
+import Tooltip from "../components/Tooltip.vue";
 
 const route = useRoute();
 const router = useRouter();
 const passwordStore = usePasswordStore();
 
 const showDeleteConfirmModal = ref(false);
-const localPassword = ref<Omit<Password, 'OnModified'>>({
+const localPassword = ref<Omit<Password, "OnModified">>({
   Id: 0,
   Name: "",
   Username: "",
@@ -122,124 +123,139 @@ const handleCancelDelete = () => {
 </script>
 
 <template>
-  <div>
-    <div class="mb-4 flex items-center justify-between">
-      <!-- Back Link -->
-      <RouterLink
-        to="/"
-        class="flex items-center gap-1 font-medium text-sm text-gray-800 hover:text-gray-700"
-      >
-        <button title="Back">
-          <LeftArrowIcon class-name="size-4" />
-        </button>
-      </RouterLink>
-
-      <!-- Delete Button (only show if editing existing password) -->
-      <ConfirmationModal
-        v-if="localPassword.Id && localPassword.Id !== 0"
-        v-model="showDeleteConfirmModal"
-        title="Delete this password?"
-        confirm-button-text="Yes, Delete It!"
-        cancel-button-text="Cancel"
-        @confirm="handleConfirmDelete"
-        @cancel="handleCancelDelete"
-      >
-        <!-- This slot holds the trigger button -->
-        <template #trigger>
-          <div class="flex justify-end items-center">
-            <button
-              title="Delete Password"
-              class="p-2 bg-gray-100 rounded-md hover:bg-gray-200"
-            >
-              <DeleteIcon class="w-4 h-auto fill-red-600" />
+  <div class="h-full flex flex-col items-center justify-center">
+    <div class="w-full">
+      <div class="mb-4 flex items-center justify-between">
+        <!-- Back Link -->
+        <Tooltip text="Go Back">
+          <RouterLink
+            to="/"
+            class="flex items-center gap-1 font-medium text-sm text-gray-800 hover:text-gray-700"
+          >
+            <button title="Back">
+              <LeftArrowIcon class-name="size-4" />
             </button>
-          </div>
-        </template>
-        <p class="text-gray-700 text-sm">
-          Are you sure you want to delete this password ({{
-            localPassword.Name
-          }})? This cannot be undone.
-        </p>
-      </ConfirmationModal>
-    </div>
+          </RouterLink>
+        </Tooltip>
 
-    <div class="space-y-4">
-      <!-- Name Field -->
-      <div>
-        <label for="name" class="block text-xs font-medium text-gray-900">
-          Name
-        </label>
-        <div class="mt-2 flex items-center">
-          <input
-            type="text"
-            name="name"
-            id="name"
-            v-model="localPassword.Name"
-            class="block w-full rounded-md bg-white px-3 py-2 text-xs text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-secondary"
-          />
-          <ClipboardButtonWithFeedback :text-to-copy="localPassword.Name" />
-        </div>
-      </div>
-
-      <!-- Username Field -->
-      <div>
-        <label for="username" class="block text-xs font-medium text-gray-900">
-          Username
-        </label>
-        <div class="mt-2 flex items-center">
-          <input
-            type="text"
-            name="username"
-            id="username"
-            v-model="localPassword.Username"
-            class="block w-full rounded-md bg-white px-3 py-2 text-xs text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-secondary"
-          />
-          <ClipboardButtonWithFeedback :text-to-copy="localPassword.Username" />
-        </div>
-      </div>
-
-      <!-- Password Field -->
-      <div>
-        <label for="password" class="block text-xs font-medium text-gray-900">
-          Password
-        </label>
-        <div class="mt-2 flex items-center">
-          <input
-            type="text"
-            name="password"
-            id="password"
-            v-model="localPassword.Password"
-            class="block w-full rounded-md bg-white px-3 py-2 text-xs text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-secondary"
-          />
-          <ClipboardButtonWithFeedback :text-to-copy="localPassword.Password" />
-        </div>
-      </div>
-
-      <!-- URL Field -->
-      <div>
-        <label for="url" class="block text-xs font-medium text-gray-900">
-          URL
-        </label>
-        <div class="mt-2 flex items-center">
-          <input
-            type="text"
-            name="url"
-            id="url"
-            v-model="localPassword.Url"
-            class="block w-full rounded-md bg-white px-3 py-2 text-xs text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-secondary"
-          />
-          <ClipboardButtonWithFeedback :text-to-copy="localPassword.Url" />
-        </div>
-      </div>
-
-      <div class="flex justify-end">
-        <button
-          type="button"
-          @click="handleSavePassword"
-          class="mt-6 rounded-md btn-primary px-3 py-2 text-xs font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+        <!-- Delete Button (only show if editing existing password) -->
+        <DialogModal
+          v-if="localPassword.Id && localPassword.Id !== 0"
+          v-model="showDeleteConfirmModal"
+          title="Delete this password?"
+          confirm-button-text="Yes, Delete It!"
+          cancel-button-text="Cancel"
+          @confirm="handleConfirmDelete"
+          @cancel="handleCancelDelete"
         >
-          {{ localPassword.Id && localPassword.Id !== 0 ? 'Update' : 'Save' }}
-        </button>
+          <!-- This slot holds the trigger button -->
+          <template #trigger>
+            <div class="flex justify-end items-center">
+              <Tooltip text="Delete">
+                <button class="p-2 bg-gray-100 rounded-md hover:bg-gray-200">
+                  <DeleteIcon class="w-4 h-auto fill-red-600" />
+                </button>
+              </Tooltip>
+            </div>
+          </template>
+          <p class="text-gray-700 text-sm">
+            Are you sure you want to delete this password ({{
+              localPassword.Name
+            }})? This cannot be undone.
+          </p>
+        </DialogModal>
+      </div>
+
+      <div class="space-y-4">
+        <!-- Name Field -->
+        <div>
+          <label for="name" class="block text-xs font-medium text-gray-900">
+            Name
+          </label>
+          <div class="mt-2 flex items-center">
+            <input
+              type="text"
+              name="name"
+              id="name"
+              v-model="localPassword.Name"
+              class="block w-full rounded-md bg-white px-3 py-2 text-xs text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-secondary"
+            />
+            <Tooltip text="Copy">
+              <ClipboardButtonWithFeedback :text-to-copy="localPassword.Name" />
+            </Tooltip>
+          </div>
+        </div>
+
+        <!-- Username Field -->
+        <div>
+          <label for="username" class="block text-xs font-medium text-gray-900">
+            Username
+          </label>
+          <div class="mt-2 flex items-center">
+            <input
+              type="text"
+              name="username"
+              id="username"
+              v-model="localPassword.Username"
+              class="block w-full rounded-md bg-white px-3 py-2 text-xs text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-secondary"
+            />
+            <Tooltip text="Copy">
+              <ClipboardButtonWithFeedback
+                :text-to-copy="localPassword.Username"
+              />
+            </Tooltip>
+          </div>
+        </div>
+
+        <!-- Password Field -->
+        <div>
+          <label for="password" class="block text-xs font-medium text-gray-900">
+            Password
+          </label>
+          <div class="mt-2 flex items-center">
+            <input
+              type="text"
+              name="password"
+              id="password"
+              v-model="localPassword.Password"
+              class="block w-full rounded-md bg-white px-3 py-2 text-xs text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-secondary"
+            />
+            <Tooltip text="Copy">
+              <ClipboardButtonWithFeedback
+                :text-to-copy="localPassword.Password"
+              />
+            </Tooltip>
+          </div>
+        </div>
+
+        <!-- URL Field -->
+        <div>
+          <label for="url" class="block text-xs font-medium text-gray-900">
+            URL
+          </label>
+          <div class="mt-2 flex items-center">
+            <input
+              type="text"
+              name="url"
+              id="url"
+              v-model="localPassword.Url"
+              class="block w-full rounded-md bg-white px-3 py-2 text-xs text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-secondary"
+            />
+            <Tooltip text="Copy">
+              <ClipboardButtonWithFeedback :text-to-copy="localPassword.Url" />
+            </Tooltip>
+          </div>
+        </div>
+
+        <div class="flex justify-end">
+          <button
+            type="button"
+            @click="handleSavePassword"
+            class="mt-6 rounded-md btn-primary px-3 py-2 text-xs font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+          >
+            {{ localPassword.Id && localPassword.Id !== 0 ? "Update" : "Save" }}
+          </button>
+        </div>
       </div>
     </div>
   </div>

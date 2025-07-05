@@ -1,21 +1,72 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 import LeftArrowIcon from "../components/icons/LeftArrowIcon.vue";
+import EditDatabaseModal from "../components/modals/EditDatabaseModal.vue";
+import { Database } from "../typings/database";
+import DeleteModal from "../components/modals/DeleteModal.vue";
+import DeleteIcon from "../components/icons/DeleteIcon.vue";
+import EditIcon from "../components/icons/EditIcon.vue";
+import Tooltip from "../components/Tooltip.vue";
+import PlusCircleIcon from "../components/icons/PlusCircleIcon.vue";
 
 const router = useRouter();
 
-function goBack() {
-  router.push("/"); // Navigate back to the home page
+const isModalOpen = ref(false);
+const isDeleteModalOpen = ref(false);
+const selectedDatabase = ref<Database | null>(null);
+const databases = ref<Database[]>([
+  {
+    id: 1,
+    name: "Local Storage",
+    type: "SQLite",
+    connectionString: "sqlite://user:pass@localhost/db1",
+  },
+  {
+    id: 2,
+    name: "Raspberry Pi",
+    type: "MySQL",
+    connectionString: "mysql://user:pass@localhost/db2",
+  },
+]);
+
+function openEditModal(database: Database) {
+  selectedDatabase.value = database;
+  isModalOpen.value = true;
+}
+
+function handleSave(updatedDatabase: Database) {
+  console.log("Saving database:", updatedDatabase);
+  const index = databases.value.findIndex((db) => db.id === updatedDatabase.id);
+  if (index !== -1) {
+    databases.value[index] = updatedDatabase;
+  }
+  isModalOpen.value = false;
+}
+
+function handleCancel() {
+  isModalOpen.value = false;
+  selectedDatabase.value = null;
+}
+
+function handleDeleteConfirm() {
+  console.log("Deleting database:", selectedDatabase.value);
+  if (selectedDatabase.value) {
+    databases.value = databases.value.filter(
+      (db) => db.id !== selectedDatabase.value!.id
+    );
+  }
+  isDeleteModalOpen.value = false;
+  selectedDatabase.value = null;
+}
+
+function handleDeleteCancel() {
+  isDeleteModalOpen.value = false;
+  selectedDatabase.value = null;
 }
 </script>
 
 <template>
-  <RouterLink
-    to="/"
-    class="flex items-center gap-1 text-gray-800 hover:text-gray-700 pt-2 pb-4"
-  >
-    <LeftArrowIcon class-name="size-4" />
-  </RouterLink>
   <div class="space-y-3">
     <div>
       <h1 class="text-base font-semibold text-gray-800">Options</h1>
@@ -23,100 +74,101 @@ function goBack() {
         Manage your databases and add new ones as needed.
       </p>
     </div>
-    <div class="flex items-center gap-2 justify-end">
-      <button class="btn-primary rounded-lg px-1.5 py-1 text-xs">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          class="size-4"
-        >
-          <path
-            fill-rule="evenodd"
-            d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z"
-            clip-rule="evenodd"
-          />
-        </svg>
-      </button>
-      <span class="text-gray-700 text-xs"> Add New Database </span>
+    <div class="flex justify-end">
+      <Tooltip text="Add db">
+        <button class="btn-primary rounded-lg px-1.5 py-1 text-xs">
+          <PlusCircleIcon class-name="size-5" />
+        </button>
+      </Tooltip>
     </div>
-    <!-- 
-  The outer container now uses `overflow-hidden`. This strictly prevents any
-  part of the table from becoming visible outside these bounds, removing any
-  possibility of a scrollbar.
--->
-<div
-  class="relative py-3 w-full overflow-hidden rounded-lg border border-gray-200 bg-white shadow-md"
->
-  <!-- 
-    `table-fixed` is essential. It forces the table to obey the widths set in the <thead>.
-  -->
-  <table class="w-full table-fixed">
-    <thead>
-      <tr>
-        <!-- Set explicit widths for the columns that should not expand -->
-        <th class="w-28 px-4 py-2 text-left text-xs font-medium text-gray-600">
-          Name
-        </th>
-        <th class="w-20 px-4 py-2 text-left text-xs font-medium text-gray-600">
-          Type
-        </th>
-        <!-- This column gets the remaining space -->
-        <th class="px-4 py-2 text-left text-xs font-medium text-gray-600">
-          Connection String
-        </th>
-        <th class="w-24 px-4 py-2 text-left text-xs font-medium text-gray-600">
-          Actions
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <!-- 
-          KEY CHANGE: We place a `div` inside the `td` and apply `truncate` to it.
-          This is a much more reliable way to handle text overflow in tables.
-        -->
-        <td class="px-4 py-2">
-          <div class="truncate text-xs">LocalStorage</div>
-        </td>
-        <td class="px-4 py-2">
-          <div class="truncate text-xs">SQLite</div>
-        </td>
-        <td class="px-4 py-2">
-          <div class="truncate text-xs">localstorage://</div>
-        </td>
-        <td class="px-4 py-2">
-          <!-- `whitespace-nowrap` on the div keeps buttons on one line -->
-          <div class="whitespace-nowrap text-xs">
-            <button class="text-blue-600 hover:underline">Edit</button>
-            <button class="ms-2 text-red-600 hover:underline">Delete</button>
-          </div>
-        </td>
-      </tr>
-      <!-- Example row with long content to demonstrate truncation -->
-      <tr>
-        <td class="px-4 py-2">
-          <div class="truncate text-xs">
-            Raspberry Pi 5
-          </div>
-        </td>
-        <td class="px-4 py-2">
-          <div class="truncate text-xs">MySQL</div>
-        </td>
-        <td class="px-4 py-2">
-          <div class="truncate text-xs">
-            postgresql://user:supersecretpassword@prod-db.example.com:5432/main_database
-          </div>
-        </td>
-        <td class="px-4 py-2">
-          <div class="whitespace-nowrap text-xs">
-            <button class="text-blue-600 hover:underline">Edit</button>
-            <button class="ms-2 text-red-600 hover:underline">Delete</button>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+    <div
+      class="relative py-3 w-full overflow-hidden rounded-lg border border-gray-200 bg-white shadow-md"
+    >
+      <table class="w-full table-fixed">
+        <thead>
+          <tr>
+            <!-- Set explicit widths for the columns that should not expand -->
+            <th
+              class="w-28 px-4 py-2 text-left text-xs font-medium text-gray-600"
+            >
+              Name
+            </th>
+            <th
+              class="w-20 px-4 py-2 text-left text-xs font-medium text-gray-600"
+            >
+              Type
+            </th>
+            <!-- This column gets the remaining space -->
+            <th class="px-4 py-2 text-left text-xs font-medium text-gray-600">
+              Connection String
+            </th>
+            <th
+              class="w-24 px-4 py-2 text-left text-xs font-medium text-gray-600"
+            >
+              Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="database in databases" :key="database.id">
+            <td class="px-4 py-2">
+              <div class="truncate text-xs">{{ database.name }}</div>
+            </td>
+            <td class="px-4 py-2">
+              <div class="truncate text-xs">{{ database.type }}</div>
+            </td>
+            <td class="px-4 py-2">
+              <div class="truncate text-xs">
+                {{ database.connectionString }}
+              </div>
+            </td>
+            <td class="px-4 py-2">
+              <div class="whitespace-nowrap text-xs">
+                <button
+                  class="text-secondary hover:bg-gray-100 p-1 rounded"
+                  @click="openEditModal(database)"
+                >
+                  <Tooltip text="Edit">
+                    <EditIcon class-name="size-4" />
+                  </Tooltip>
+                </button>
+                <button
+                  class="ms-2 text-red-600 hover:bg-gray-100 p-1 rounded"
+                  @click="
+                    () => {
+                      isDeleteModalOpen = true;
+                      selectedDatabase = database;
+                    }
+                  "
+                >
+                  <Tooltip text="Delete">
+                    <DeleteIcon class-name="size-4" />
+                  </Tooltip>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
+
+  <EditDatabaseModal
+    v-model="isModalOpen"
+    title="Edit Database"
+    :database="selectedDatabase"
+    confirm-button-text="Save"
+    cancel-button-text="Cancel"
+    @save="handleSave"
+    @cancel="handleCancel"
+  />
+
+  <DeleteModal
+    v-model="isDeleteModalOpen"
+    :id="selectedDatabase?.id"
+    text="Are you sure you want to delete this database? This action cannot be undone."
+    :title="`Confirm Delete for ${selectedDatabase?.name}`"
+    @confirm="handleDeleteConfirm"
+    @cancel="handleDeleteCancel"
+  />
 </template>

@@ -9,14 +9,12 @@ function getMenuItemIcon(baseName) {
   const icon1xPath = join(app.getAppPath(), 'static', `${baseName}.png`);
   const icon2xPath = join(app.getAppPath(), 'static', `${baseName}@2x.png`);
   if (fs.existsSync(icon1xPath)) {
-    console.log("Adding icon:", icon1xPath);
     img.addRepresentation({
       scaleFactor: 1.0,
       buffer: fs.readFileSync(icon1xPath)
     });
   }
   if (fs.existsSync(icon2xPath)) {
-    console.log("Adding icon:", icon2xPath);
     img.addRepresentation({
       scaleFactor: 2.0,
       buffer: fs.readFileSync(icon2xPath)
@@ -91,6 +89,24 @@ export function createMenu(db: DatabaseRepository) {
       ],
     },
   ];
+
+  // Add DevTools menu item in development
+  if (process.env.NODE_ENV !== "production") {
+    template.push({
+      label: "Debug",
+      submenu: [
+        {
+          label: "Toggle Dev Tools",
+          click: () => {
+            const mainWindow = BrowserWindow.getAllWindows()[0];
+            if (mainWindow && !mainWindow.isDestroyed()) {
+              mainWindow.webContents.toggleDevTools();
+            }
+          },
+        },
+      ],
+    });
+  }
 
   // macOS specific menu adjustments
   if (process.platform === "darwin") {
