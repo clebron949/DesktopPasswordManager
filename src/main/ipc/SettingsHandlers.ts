@@ -1,9 +1,7 @@
-import { ipcMain, app } from "electron";
+import { ipcMain } from "electron";
 import { StorageService, AppSettings } from "../services/LocalStorageService";
-import {join} from "path";
 
-const path = join(app.getPath("userData"), "storage");
-const storageService = StorageService.getInstance(path);
+const storageService = StorageService.getInstance();
 
 export function registerSettingsHandlers() {
   ipcMain.handle("settings:get", async (): Promise<AppSettings> => {
@@ -14,10 +12,11 @@ export function registerSettingsHandlers() {
     "settings:save",
     async (_, settings: Partial<AppSettings>): Promise<void> => {
       return await storageService.saveSettings(settings);
-    }
+    },
   );
 
   ipcMain.handle("settings:reset", async (): Promise<void> => {
     return await storageService.resetSettings();
   });
 }
+

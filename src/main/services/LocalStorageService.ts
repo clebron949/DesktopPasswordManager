@@ -1,5 +1,11 @@
 import storage from "electron-json-storage";
 import { DatabaseConnection } from "../types/DatabaseConnection";
+import { app } from "electron";
+import { join } from "path";
+import { DatabaseProvider } from "../database/DatabaseProvider";
+
+const basePath = join(app.getPath("userData"), "storage");
+const dbPath = join(basePath, "password-manager.db");
 
 export interface AppSettings {
   theme: "light" | "dark";
@@ -8,17 +14,24 @@ export interface AppSettings {
   includeSymbols: boolean;
   includeLowercase: boolean;
   includeUppercase: boolean;
+  defaultdbConnection?: DatabaseConnection;
   dbConnections?: DatabaseConnection[];
 }
 
 const defaultSettings: AppSettings = {
   theme: "light",
-  itemsPerPage: 10,
+  itemsPerPage: 5,
   passwordLength: 12,
   includeSymbols: true,
   includeLowercase: true,
   includeUppercase: true,
   dbConnections: [],
+  defaultdbConnection: {
+    id: 1,
+    name: "Local",
+    dbType: DatabaseProvider.SQLite,
+    connectionString: dbPath,
+  },
 };
 
 export class StorageService {
@@ -31,9 +44,9 @@ export class StorageService {
     storage.setDataPath(path);
   }
 
-  static getInstance(path: string): StorageService {
+  static getInstance(): StorageService {
     if (!StorageService.instance) {
-      StorageService.instance = new StorageService(path);
+      StorageService.instance = new StorageService(basePath);
     }
     return StorageService.instance;
   }

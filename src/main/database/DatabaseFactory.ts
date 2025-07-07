@@ -25,7 +25,7 @@ export class DatabaseFactory {
     return this.dbInstance;
   }
 
-  static handleDatabaseRepositoryChange(
+  static handleChangeDatabaseRepository(
     dbProvider: DatabaseProvider,
     connectionString: string,
   ): IDatabaseRepository {

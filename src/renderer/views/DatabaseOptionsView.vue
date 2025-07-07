@@ -1,36 +1,35 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import EditDatabaseModal from "../components/modals/EditDatabaseModal.vue";
 import { Database } from "../typings/database";
+import { useAppStore } from "../stores/appSettingsStore";
 import DeleteModal from "../components/modals/DeleteModal.vue";
 import DeleteIcon from "../components/icons/DeleteIcon.vue";
 import EditIcon from "../components/icons/EditIcon.vue";
 import Tooltip from "../components/Tooltip.vue";
 import PlusCircleIcon from "../components/icons/PlusCircleIcon.vue";
 
+enum DatabaseProvider {
+  SQLite,
+  MySQL,
+}
+
+const appStore = useAppStore();
+
 const isModalOpen = ref(false);
 const isDeleteModalOpen = ref(false);
 const selectedDatabase = ref<Database | null>(null);
-const databases = ref<Database[]>([
-  {
-    id: 1,
-    name: "Local Storage",
-    type: "SQLite",
-    connectionString: "sqlite://user:pass@localhost/db1",
-  },
-  {
-    id: 2,
-    name: "Raspberry Pi",
-    type: "MySQL",
-    connectionString: "mysql://user:pass@localhost/db2",
-  },
-  {
-    id: 3,
-    name: "Test",
-    type: "SQLite",
-    connectionString: "mysql://user:pass@localhost/db3",
-  },
-]);
+const databases = ref<Database[]>([]);
+
+onMounted(async () => {
+  const providers = await appStore.getDatabaseProviders();
+  databases.value = providers.map((db) => ({
+    id: db.id,
+    name: db.name,
+    type: DatabaseProvider[db.dbType],
+    connectionString: db.connectionString,
+  }));
+});
 
 function addNewDatabase() {
   const newDatabase: Database = {

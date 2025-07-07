@@ -1,37 +1,21 @@
 import { app } from "electron";
 import { StorageService, AppSettings } from "../services/LocalStorageService";
 import { join } from "path";
-import { DatabaseProvider } from "../database/DatabaseProvider";
 import { DatabaseFactory } from "../database/DatabaseFactory";
-import { DatabaseConnection } from "../types/DatabaseConnection";
 
-const basePath = join(app.getPath("userData"), "storage");
-const storageService = StorageService.getInstance(basePath);
-const dbPath = join(basePath, "password-manager.db");
+const storageService = StorageService.getInstance();
 
 export async function registerDefaultDatabase() {
   const settings = await storageService.getSettings();
+  const dbConnection = settings.defaultdbConnection;
 
-  if (settings.dbConnections?.length !== 0) {
-    return;
+  if (!dbConnection) {
+    throw Error("Could not find a defaultDatabaseConnection");
   }
 
-  const defaultDatabaseConnection: DatabaseConnection = {
-    id: 1,
-    name: "Local",
-    dbType: DatabaseProvider.SQLite,
-    connectionString: dbPath,
-  };
-
-  const defaultDatabaseConnections: DatabaseConnection[] = [
-    defaultDatabaseConnection,
-  ];
-
-  storageService.saveSettings({ dbConnections: defaultDatabaseConnections });
-
   const db = DatabaseFactory.createDatabaseRepository(
-    defaultDatabaseConnection.dbType,
-    defaultDatabaseConnection.connectionString,
+    dbConnection.dbType,
+    dbConnection.connectionString,
   );
 
   await db.createDatabase();

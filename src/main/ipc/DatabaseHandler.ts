@@ -1,6 +1,9 @@
 import { ipcMain } from "electron";
 import { Password } from "../types/password";
 import { DatabaseFactory } from "../database/DatabaseFactory";
+import { StorageService } from "../services/LocalStorageService";
+
+const storageService = StorageService.getInstance();
 
 export function registerDatabaseHandlers() {
   ipcMain.handle("database:getPasswords", async (): Promise<Password[]> => {
@@ -51,6 +54,11 @@ export function registerDatabaseHandlers() {
   );
 
   ipcMain.handle("database:close", async (): Promise<void> => {
+    const db = DatabaseFactory.getDatabaseRepository();
+    db.close();
+  });
+
+  ipcMain.handle("database:change-provider", async (): Promise<void> => {
     const db = DatabaseFactory.getDatabaseRepository();
     db.close();
   });
