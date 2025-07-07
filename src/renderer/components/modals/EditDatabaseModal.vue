@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, onMounted, onUnmounted, nextTick } from "vue";
+import { ref, watch } from "vue";
 import DialogModal from "./DialogModal.vue";
 import Input from "../forms/Input.vue";
 import { Database } from "../../typings/database";
@@ -43,8 +43,16 @@ const form = ref<Database>({
 });
 
 const handleSave = () => {
-  console.log("Saving database:", form.value);
-  emit("save", form.value);
+  if (
+    form.value.name !== "" ||
+    form.value.type !== "" ||
+    form.value.connectionString !== ""
+  ) {
+    console.log("Saving Database:", JSON.stringify(form.value, null, 2));
+    emit("save", form.value);
+  } else {
+    emit("cancel");
+  }
 };
 
 const handleCancel = () => {
@@ -56,14 +64,11 @@ watch(
   (newValue) => {
     isOpen.value = newValue;
     if (newValue && props.database) {
-      // Populate form with the database data when modal opens
-      console.log("Opening modal with database:", props.database);
       form.value = { ...props.database };
     } else {
-      // Reset form when modal closes
       form.value = { id: 0, name: "", type: "", connectionString: "" };
     }
-  }
+  },
 );
 </script>
 

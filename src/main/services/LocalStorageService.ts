@@ -1,4 +1,5 @@
 import storage from "electron-json-storage";
+import { DatabaseConnection } from "../types/DatabaseConnection";
 
 export interface AppSettings {
   theme: "light" | "dark";
@@ -7,6 +8,7 @@ export interface AppSettings {
   includeSymbols: boolean;
   includeLowercase: boolean;
   includeUppercase: boolean;
+  dbConnections?: DatabaseConnection[];
 }
 
 const defaultSettings: AppSettings = {
@@ -16,6 +18,7 @@ const defaultSettings: AppSettings = {
   includeSymbols: true,
   includeLowercase: true,
   includeUppercase: true,
+  dbConnections: [],
 };
 
 export class StorageService {
@@ -42,9 +45,6 @@ export class StorageService {
           reject(error);
           return;
         }
-
-        // Provide default settings if none exist
-
         resolve({ ...defaultSettings, ...data } as AppSettings);
       });
     });
@@ -57,7 +57,7 @@ export class StorageService {
         const currentSettings = await this.getSettings();
         const updatedSettings = { ...currentSettings, ...settings };
 
-        storage.set(this.SETTINGS_KEY, updatedSettings, (error) => {
+        storage.set(this.SETTINGS_KEY, updatedSettings, (error: Error) => {
           if (error) {
             reject(error);
             return;
@@ -72,7 +72,7 @@ export class StorageService {
 
   async resetSettings(): Promise<void> {
     return new Promise((resolve, reject) => {
-      storage.remove(this.SETTINGS_KEY, (error) => {
+      storage.remove(this.SETTINGS_KEY, (error: Error) => {
         if (error) {
           reject(error);
           return;

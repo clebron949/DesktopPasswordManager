@@ -1,30 +1,29 @@
 import { app, BrowserWindow, Menu, nativeImage } from "electron";
 import { handleFileExport, handleFileImport } from "./importExport";
-import { DatabaseRepository } from "../services/SQLiteService";
 import { join } from "path";
 import * as fs from "fs";
 
-function getMenuItemIcon(baseName) {
+function getMenuItemIcon(baseName: string) {
   const img = nativeImage.createEmpty();
-  const icon1xPath = join(app.getAppPath(), 'static', `${baseName}.png`);
-  const icon2xPath = join(app.getAppPath(), 'static', `${baseName}@2x.png`);
+  const icon1xPath = join(app.getAppPath(), "static", `${baseName}.png`);
+  const icon2xPath = join(app.getAppPath(), "static", `${baseName}@2x.png`);
   if (fs.existsSync(icon1xPath)) {
     img.addRepresentation({
       scaleFactor: 1.0,
-      buffer: fs.readFileSync(icon1xPath)
+      buffer: fs.readFileSync(icon1xPath),
     });
   }
   if (fs.existsSync(icon2xPath)) {
     img.addRepresentation({
       scaleFactor: 2.0,
-      buffer: fs.readFileSync(icon2xPath)
+      buffer: fs.readFileSync(icon2xPath),
     });
   }
   // Add more resolutions as needed (e.g., 3.0 for @3x.png)
   return img;
 }
 
-export function createMenu(db: DatabaseRepository) {
+export function createMenu() {
   // log current path
   console.log("Current Path:", app.getAppPath());
   const template: Electron.MenuItemConstructorOptions[] = [
@@ -34,13 +33,13 @@ export function createMenu(db: DatabaseRepository) {
         {
           label: "Import",
           click: async () => {
-            await handleFileImport(db);
+            await handleFileImport();
           },
         },
         {
           label: "Export",
           click: async () => {
-            await handleFileExport(db);
+            await handleFileExport();
           },
         },
         { type: "separator" },

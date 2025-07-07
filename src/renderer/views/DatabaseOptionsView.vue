@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { useRouter } from "vue-router";
-import LeftArrowIcon from "../components/icons/LeftArrowIcon.vue";
 import EditDatabaseModal from "../components/modals/EditDatabaseModal.vue";
 import { Database } from "../typings/database";
 import DeleteModal from "../components/modals/DeleteModal.vue";
@@ -9,8 +7,6 @@ import DeleteIcon from "../components/icons/DeleteIcon.vue";
 import EditIcon from "../components/icons/EditIcon.vue";
 import Tooltip from "../components/Tooltip.vue";
 import PlusCircleIcon from "../components/icons/PlusCircleIcon.vue";
-
-const router = useRouter();
 
 const isModalOpen = ref(false);
 const isDeleteModalOpen = ref(false);
@@ -28,7 +24,23 @@ const databases = ref<Database[]>([
     type: "MySQL",
     connectionString: "mysql://user:pass@localhost/db2",
   },
+  {
+    id: 3,
+    name: "Test",
+    type: "SQLite",
+    connectionString: "mysql://user:pass@localhost/db3",
+  },
 ]);
+
+function addNewDatabase() {
+  const newDatabase: Database = {
+    id: 0, // Simple ID generation for demo purposes
+    name: "",
+    type: "",
+    connectionString: "",
+  };
+  openEditModal(newDatabase);
+}
 
 function openEditModal(database: Database) {
   selectedDatabase.value = database;
@@ -36,11 +48,16 @@ function openEditModal(database: Database) {
 }
 
 function handleSave(updatedDatabase: Database) {
-  console.log("Saving database:", updatedDatabase);
   const index = databases.value.findIndex((db) => db.id === updatedDatabase.id);
   if (index !== -1) {
     databases.value[index] = updatedDatabase;
+  } else {
+    if (updatedDatabase.id === 0) {
+      updatedDatabase.id = Math.max(...databases.value.map((db) => db.id)) + 1;
+    }
+    databases.value.push(updatedDatabase);
   }
+  console.log("Saving database:", JSON.stringify(updatedDatabase, null, 2));
   isModalOpen.value = false;
 }
 
@@ -50,10 +67,9 @@ function handleCancel() {
 }
 
 function handleDeleteConfirm() {
-  console.log("Deleting database:", selectedDatabase.value);
   if (selectedDatabase.value) {
     databases.value = databases.value.filter(
-      (db) => db.id !== selectedDatabase.value!.id
+      (db) => db.id !== selectedDatabase.value!.id,
     );
   }
   isDeleteModalOpen.value = false;
@@ -76,7 +92,10 @@ function handleDeleteCancel() {
     </div>
     <div class="flex justify-end">
       <Tooltip text="Add db">
-        <button class="btn-primary rounded-lg px-1.5 py-1 text-xs">
+        <button
+          @click="addNewDatabase"
+          class="btn-primary rounded-lg px-1.5 py-1 text-xs"
+        >
           <PlusCircleIcon class-name="size-5" />
         </button>
       </Tooltip>
