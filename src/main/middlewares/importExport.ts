@@ -35,7 +35,7 @@ export async function handleFileImport(db: DatabaseRepository) {
     default:
       dialog.showErrorBox(
         "Unsupported File Type",
-        "Please select a valid CSV or JSON file."
+        "Please select a valid CSV or JSON file.",
       );
       return;
   }
@@ -53,7 +53,7 @@ export async function handleFileImport(db: DatabaseRepository) {
 
 async function importCSVFile(
   db: DatabaseRepository,
-  path: string
+  path: string,
 ): Promise<number> {
   let importCount = 0;
   try {
@@ -70,6 +70,7 @@ async function importCSVFile(
         Username: record.Username,
         Password: record.Password,
         Url: record.Url,
+        IsPinned: record.IsPinned || false, // Default to false if not provided
       };
       importCount = importCount + (await InsertToDatabase(db, password));
     }
@@ -82,7 +83,7 @@ async function importCSVFile(
 
 async function importJSONFile(
   db: DatabaseRepository,
-  path: string
+  path: string,
 ): Promise<number> {
   let importCount = 0;
   try {
@@ -96,6 +97,7 @@ async function importJSONFile(
         Username: item.Username,
         Password: item.Password,
         Url: item.Url,
+        IsPinned: item.IsPinned || false, // Default to false if not provided
       };
       importCount = importCount + (await InsertToDatabase(db, password));
     }
@@ -108,12 +110,12 @@ async function importJSONFile(
 
 async function InsertToDatabase(
   db: DatabaseRepository,
-  password: Omit<Password, "Id" | "OnCreated" | "OnModified">
+  password: Omit<Password, "Id" | "OnCreated" | "OnModified">,
 ): Promise<number> {
   try {
     if (await recordExist(db, password)) {
       console.log(
-        `Skipping duplicate record: ${password.Name} - ${password.Username}`
+        `Skipping duplicate record: ${password.Name} - ${password.Username}`,
       );
       return -1; // Return -1 for skipped records
     }
@@ -121,7 +123,6 @@ async function InsertToDatabase(
     console.log("Importing record:", password);
     await db.insertPassword(password);
     return 1;
-
   } catch (error) {
     console.error("Error inserting to database:", error);
     return -1; // Return -1 for failed inserts
@@ -130,12 +131,12 @@ async function InsertToDatabase(
 
 async function recordExist(
   db: DatabaseRepository,
-  password: Omit<Password, "Id" | "OnCreated" | "OnModified">
+  password: Omit<Password, "Id" | "OnCreated" | "OnModified">,
 ): Promise<boolean> {
   try {
     const passwords = await db.getPasswords();
     const existingRecord = passwords.find(
-      (p) => p.Name === password.Name && p.Username === password.Username
+      (p) => p.Name === password.Name && p.Username === password.Username,
     );
     return existingRecord !== undefined;
   } catch (error) {
@@ -171,7 +172,7 @@ export async function handleFileExport(db: DatabaseRepository) {
       default:
         dialog.showErrorBox(
           "Unsupported File Type",
-          "Please select a valid CSV or JSON file."
+          "Please select a valid CSV or JSON file.",
         );
     }
   } catch (error) {
@@ -200,12 +201,12 @@ async function exportToCSV(db: DatabaseRepository, filePath: string) {
 async function exportToJSON(db: DatabaseRepository, filePath: string) {
   const passwords = await db.getPasswords();
   const filteredPasswords = passwords.map(
-    ({ Id, OnCreated, OnModified, ...rest }) => rest
+    ({ Id, OnCreated, OnModified, ...rest }) => rest,
   );
   fs.writeFileSync(
     filePath,
     JSON.stringify(filteredPasswords, null, 2),
-    "utf-8"
+    "utf-8",
   );
   dialog.showMessageBox({
     title: "Notification",

@@ -6,6 +6,7 @@ export interface Password {
   Username: string;
   Password: string;
   Url: string;
+  IsPinned: boolean;
   OnCreated: string;
   OnModified: string;
 }
@@ -15,11 +16,11 @@ export interface DatabaseRepository {
   getPasswords(): Promise<Password[]>;
   getPasswordById(id: number): Promise<Password | undefined>;
   insertPassword(
-    password: Omit<Password, "Id" | "OnCreated" | "OnModified">
+    password: Omit<Password, "Id" | "OnCreated" | "OnModified">,
   ): Promise<number>;
   updatePassword(
     id: number,
-    password: Partial<Omit<Password, "Id" | "OnCreated" | "OnModified">>
+    password: Partial<Omit<Password, "Id" | "OnCreated" | "OnModified">>,
   ): Promise<void>;
   deletePassword(id: number): Promise<void>;
   close(): Promise<void>;
@@ -67,12 +68,12 @@ export class SQLiteService implements DatabaseRepository {
   }
 
   insertPassword(
-    password: Omit<Password, "Id" | "OnCreated" | "OnModified">
+    password: Omit<Password, "Id" | "OnCreated" | "OnModified">,
   ): Promise<number> {
     return new Promise((resolve, reject) => {
       const sql = `
-        INSERT INTO Passwords (Name, Username, Password, Url)
-        VALUES (?, ?, ?, ?)
+        INSERT INTO Passwords (Name, Username, Password, Url, IsPinned)
+        VALUES (?, ?, ?, ?, ?)
       `;
       this.db.run(
         sql,
@@ -83,20 +84,22 @@ export class SQLiteService implements DatabaseRepository {
           } else {
             resolve(this.lastID);
           }
-        }
+        },
       );
     });
   }
 
   updatePassword(
     id: number,
-    password: Partial<Omit<Password, "Id" | "OnCreated" | "OnModified">>
+    password: Partial<Omit<Password, "Id" | "OnCreated" | "OnModified">>,
   ): Promise<void> {
     return new Promise((resolve, reject) => {
       const fields = Object.keys(password);
       const setClause = fields.map((key) => `${key} = ?`).join(", ");
-      const values = fields.map((key) => password[key as keyof typeof password]);
-      
+      const values = fields.map(
+        (key) => password[key as keyof typeof password],
+      );
+
       const sql = `UPDATE Passwords SET ${setClause} WHERE Id = ?`;
       this.db.run(sql, [...values, id], (err) => {
         if (err) {
@@ -142,6 +145,7 @@ export class SQLiteService implements DatabaseRepository {
           Username TEXT NOT NULL,
           Password TEXT NOT NULL,
           Url TEXT,
+          IsPinned INTEGER DEFAULT 0,
           OnCreated TEXT DEFAULT (datetime('now')),
           OnModified TEXT DEFAULT (datetime('now'))
         );
@@ -164,3 +168,4 @@ export class SQLiteService implements DatabaseRepository {
     });
   }
 }
+
