@@ -42,7 +42,10 @@ const filteredPasswords = computed(() => {
   if (searchFilter.value === null || searchFilter.value === "") {
     const startIndex = (appStore.currentPage - 1) * itemsPerPage.value;
     const endIndex = startIndex + itemsPerPage.value;
-    return passwords.value.slice(startIndex, endIndex);
+    const sortedPasswords = [...passwords.value].sort(
+      (a, b) => Number(b.IsPined) - Number(a.IsPined)
+    );
+    return sortedPasswords.slice(startIndex, endIndex);
   }
   return passwords.value.filter((f) =>
     f.Name.toLowerCase().includes(searchFilter.value.toLowerCase())
