@@ -4,7 +4,7 @@ export interface Password {
   Username: string;
   Password: string;
   Url: string;
-  IsPined: boolean;
+  IsPinned: boolean;
   OnCreated: string;
   OnModified: string;
 }

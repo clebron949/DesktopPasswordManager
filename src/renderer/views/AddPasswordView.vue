@@ -7,8 +7,8 @@ import ConfirmationModal from "../components/ConfirmationModal.vue";
 import LeftArrowIcon from "../components/icons/LeftArrowIcon.vue";
 import DeleteIcon from "../components/icons/DeleteIcon.vue";
 import ClipboardButtonWithFeedback from "../components/ClipboardButtonWithFeedback.vue";
-import BellIcon from "../components/icons/BellIcon.vue";
-import BellSlashIcon from "../components/icons/BellSlashIcon.vue";
+import PinIcon from "../components/icons/PinIcon.vue";
+import PinAngleIcon from "../components/icons/PinAngleIcon.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -21,7 +21,7 @@ const localPassword = ref<Omit<Password, "OnModified">>({
   Username: "",
   Password: "",
   Url: "",
-  IsPined: false,
+  IsPinned: false,
   OnCreated: "",
 });
 
@@ -34,7 +34,7 @@ const loadPasswordDetails = async (id: number) => {
       Username: password.Username,
       Password: password.Password,
       Url: password.Url,
-      IsPined: password.IsPined,
+      IsPinned: password.IsPinned,
       OnCreated: password.OnCreated,
     };
   } else {
@@ -64,11 +64,11 @@ watch(
         Username: "",
         Password: "",
         Url: "",
-        IsPined: false,
+        IsPinned: false,
         OnCreated: "",
       };
     }
-  },
+  }
 );
 
 const handleSavePassword = async () => {
@@ -81,7 +81,7 @@ const handleSavePassword = async () => {
         Username: localPassword.value.Username,
         Password: localPassword.value.Password,
         Url: localPassword.value.Url,
-        IsPined: localPassword.value.IsPined,
+        IsPinned: localPassword.value.IsPinned,
         OnCreated: localPassword.value.OnCreated,
       });
       console.log("Password updated successfully");
@@ -95,7 +95,7 @@ const handleSavePassword = async () => {
         Username: localPassword.value.Username,
         Password: localPassword.value.Password,
         Url: localPassword.value.Url,
-        IsPined: localPassword.value.IsPined,
+        IsPinned: localPassword.value.IsPinned,
       });
       console.log("New password added successfully");
       // Refresh the passwords list in store
@@ -128,14 +128,14 @@ const handleCancelDelete = () => {
 };
 
 const handlePasswordPin = async () => {
-  localPassword.value.IsPined = !localPassword.value.IsPined;
+  localPassword.value.IsPinned = !localPassword.value.IsPinned;
   await passwordStore.updatePassword(localPassword.value.Id, {
     Id: localPassword.value.Id,
     Name: localPassword.value.Name,
     Username: localPassword.value.Username,
     Password: localPassword.value.Password,
     Url: localPassword.value.Url,
-    IsPined: localPassword.value.IsPined,
+    IsPinned: localPassword.value.IsPinned,
     OnCreated: localPassword.value.OnCreated,
   });
   await passwordStore.initializePasswords();
@@ -185,12 +185,12 @@ const handlePasswordPin = async () => {
     </div>
 
     <div class="space-y-4">
-      <div class="flex items-center gap-2" @click="handlePasswordPin">
-        <button>
-          <BellIcon v-if="!localPassword.IsPined" />
-          <BellSlashIcon v-else />
+      <div class="flex items-center gap-1">
+        <button @click="handlePasswordPin">
+          <PinIcon v-if="!localPassword.IsPinned" />
+          <PinAngleIcon v-else class="size-4 fill-secondary" />
         </button>
-        <span v-if="!localPassword.IsPined" class="text-sm">Pin</span>
+        <span v-if="!localPassword.IsPinned" class="text-sm">Pin</span>
         <span v-else class="text-sm">Pinned</span>
       </div>
       <!-- Name Field -->
@@ -273,4 +273,3 @@ const handlePasswordPin = async () => {
     </div>
   </div>
 </template>
-

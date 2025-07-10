@@ -70,7 +70,7 @@ async function importCSVFile(
         Username: record.Username,
         Password: record.Password,
         Url: record.Url,
-        IsPined: record.IsPined || false, // Default to false if not provided
+        IsPinned: record.IsPinned || false, // Default to false if not provided
       };
       importCount = importCount + (await InsertToDatabase(db, password));
     }
@@ -97,7 +97,7 @@ async function importJSONFile(
         Username: item.Username,
         Password: item.Password,
         Url: item.Url,
-        IsPined: item.IsPined || false, // Default to false if not provided
+        IsPinned: item.IsPinned || false, // Default to false if not provided
       };
       importCount = importCount + (await InsertToDatabase(db, password));
     }

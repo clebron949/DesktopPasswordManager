@@ -43,7 +43,7 @@ const filteredPasswords = computed(() => {
     const startIndex = (appStore.currentPage - 1) * itemsPerPage.value;
     const endIndex = startIndex + itemsPerPage.value;
     const sortedPasswords = [...passwords.value].sort(
-      (a, b) => Number(b.IsPined) - Number(a.IsPined)
+      (a, b) => Number(b.IsPinned) - Number(a.IsPinned)
     );
     return sortedPasswords.slice(startIndex, endIndex);
   }

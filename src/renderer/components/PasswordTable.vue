@@ -2,14 +2,15 @@
 import { ref, computed } from "vue";
 import { Password } from "../typings/password";
 import ChevronRightIcon from "./icons/ChevronRightIcon.vue";
+import PinAngleIcon from "./icons/PinAngleIcon.vue";
 
 const props = defineProps<{ passwords: Password[] }>();
 
 const pinnedPasswords = ref<Password[]>(
-  props.passwords.filter((p) => p.IsPined),
+  props.passwords.filter((p) => p.IsPinned),
 );
 const unPinnedPasswords = ref<Password[]>(
-  props.passwords.filter((p) => !p.IsPined),
+  props.passwords.filter((p) => !p.IsPinned),
 );
 
 const getPasswordInitials = (name: string) => {
@@ -21,17 +22,20 @@ const getPasswordInitials = (name: string) => {
 };
 
 const hasPinnedPasswords = computed(() => {
-  return props.passwords.some((p) => p.IsPined);
+  return props.passwords.some((p) => p.IsPinned);
 });
 </script>
 
 <template>
   <div>
     <div v-if="hasPinnedPasswords">
-      <span class="text-xs ms-3 text-gray-400">Pinned</span>
+      <div class="ms-3 flex items-center gap-x-1">
+        <PinAngleIcon class="size-3 fill-gray-500" />
+        <span class="text-xs text-gray-400">Pinned</span>
+      </div>
       <ul role="list" class="divide-y divide-gray-100 mb-4">
         <li
-          v-for="password in passwords.filter((p) => p.IsPined)"
+          v-for="password in passwords.filter((p) => p.IsPinned)"
           :key="password.Id"
         >
           <router-link
@@ -56,7 +60,7 @@ const hasPinnedPasswords = computed(() => {
 
     <ul role="list" class="divide-y divide-gray-100">
       <li
-        v-for="password in passwords.filter((p) => !p.IsPined)"
+        v-for="password in passwords.filter((p) => !p.IsPinned)"
         :key="password.Id"
       >
         <router-link

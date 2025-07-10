@@ -6,7 +6,7 @@ export interface Password {
   Username: string;
   Password: string;
   Url: string;
-  IsPined: boolean;
+  IsPinned: boolean;
   OnCreated: string;
   OnModified: string;
 }
@@ -72,7 +72,7 @@ export class SQLiteService implements DatabaseRepository {
   ): Promise<number> {
     return new Promise((resolve, reject) => {
       const sql = `
-        INSERT INTO Passwords (Name, Username, Password, Url, IsPined)
+        INSERT INTO Passwords (Name, Username, Password, Url, IsPinned)
         VALUES (?, ?, ?, ?, ?)
       `;
       this.db.run(
@@ -145,7 +145,7 @@ export class SQLiteService implements DatabaseRepository {
           Username TEXT NOT NULL,
           Password TEXT NOT NULL,
           Url TEXT,
-          IsPined INTEGER DEFAULT 0,
+          IsPinned INTEGER DEFAULT 0,
           OnCreated TEXT DEFAULT (datetime('now')),
           OnModified TEXT DEFAULT (datetime('now'))
         );
