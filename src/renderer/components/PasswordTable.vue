@@ -6,12 +6,9 @@ import PinAngleIcon from "./icons/PinAngleIcon.vue";
 
 const props = defineProps<{ passwords: Password[] }>();
 
-const pinnedPasswords = ref<Password[]>(
-  props.passwords.filter((p) => p.IsPinned),
-);
-const unPinnedPasswords = ref<Password[]>(
-  props.passwords.filter((p) => !p.IsPinned),
-);
+const hasPinnedPasswords = computed(() => {
+  return props.passwords.some((p) => p.IsPinned);
+});
 
 const getPasswordInitials = (name: string) => {
   const matches = name.match(/[A-Z]/g);
@@ -20,10 +17,6 @@ const getPasswordInitials = (name: string) => {
   }
   return name[0]?.toUpperCase() || "";
 };
-
-const hasPinnedPasswords = computed(() => {
-  return props.passwords.some((p) => p.IsPinned);
-});
 </script>
 
 <template>

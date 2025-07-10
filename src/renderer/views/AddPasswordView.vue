@@ -187,7 +187,10 @@ const handlePasswordPin = async () => {
     <div class="space-y-4">
       <div class="flex items-center gap-1">
         <button @click="handlePasswordPin">
-          <PinIcon v-if="!localPassword.IsPinned" />
+          <PinIcon
+            v-if="!localPassword.IsPinned"
+            class="size-4 fill-secondary"
+          />
           <PinAngleIcon v-else class="size-4 fill-secondary" />
         </button>
         <span v-if="!localPassword.IsPinned" class="text-sm">Pin</span>

@@ -1,6 +1,6 @@
 {
   "name": "password-manager",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Password Manager",
   "author": "Got Your Software, LLC <gys@gotyoursoftware.com>",
   "main": "main/main.js",

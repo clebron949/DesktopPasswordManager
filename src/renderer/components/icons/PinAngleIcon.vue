@@ -1,23 +1,11 @@
 <script setup lang="ts">
-// Define props using defineProps, compatible with TypeScript
-interface CopyIconProps {
-  className?: string;
-}
-
-// Define the component's props with a default value for className.
-const props = withDefaults(defineProps<CopyIconProps>(), {
-  className: "size-3 fill-secondary", // Default value for className
-});
-
-// You can access props using `props.className` directly in the template
-// or destructure it if preferred (though often not necessary for single props in script setup)
-const { className } = props;
+// No need to define props for class/style
 </script>
 
 <template>
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    :class="className"
+    v-bind="$attrs"
     viewBox="0 0 16 16"
   >
     <path
