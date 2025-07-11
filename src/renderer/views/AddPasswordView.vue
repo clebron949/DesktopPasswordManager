@@ -14,6 +14,7 @@ const route = useRoute();
 const router = useRouter();
 const passwordStore = usePasswordStore();
 
+const passwordInputFocused = ref(false);
 const showDeleteConfirmModal = ref(false);
 const localPassword = ref<Omit<Password, "OnModified">>({
   Id: 0,
@@ -24,24 +25,6 @@ const localPassword = ref<Omit<Password, "OnModified">>({
   IsPinned: false,
   OnCreated: "",
 });
-
-const loadPasswordDetails = async (id: number) => {
-  const password = await passwordStore.getPasswordById(id);
-  if (password) {
-    localPassword.value = {
-      Id: password.Id,
-      Name: password.Name,
-      Username: password.Username,
-      Password: password.Password,
-      Url: password.Url,
-      IsPinned: password.IsPinned,
-      OnCreated: password.OnCreated,
-    };
-  } else {
-    console.warn(`Password with ID ${id} not found.`);
-    router.push("/");
-  }
-};
 
 onMounted(async () => {
   const id = Number(route.params.id);
@@ -70,6 +53,31 @@ watch(
     }
   }
 );
+
+const loadPasswordDetails = async (id: number) => {
+  const password = await passwordStore.getPasswordById(id);
+  if (password) {
+    localPassword.value = {
+      Id: password.Id,
+      Name: password.Name,
+      Username: password.Username,
+      Password: password.Password,
+      Url: password.Url,
+      IsPinned: password.IsPinned,
+      OnCreated: password.OnCreated,
+    };
+  } else {
+    console.warn(`Password with ID ${id} not found.`);
+    router.push("/");
+  }
+};
+
+const getPasswordDisplay = () => {
+  if (localPassword.value.Id !== 0 && !passwordInputFocused.value) {
+    return '*'.repeat(localPassword.value.Password.length);
+  }
+  return localPassword.value.Password;
+}
 
 const handleSavePassword = async () => {
   try {
@@ -240,7 +248,10 @@ const handlePasswordPin = async () => {
             type="text"
             name="password"
             id="password"
-            v-model="localPassword.Password"
+            :value="getPasswordDisplay()"
+            @focus="passwordInputFocused = true"
+            @blur="passwordInputFocused = false"
+            @input="localPassword.Password = ($event.target as HTMLInputElement)?.value"
             class="block w-full rounded-md bg-white px-3 py-2 text-xs text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-secondary"
           />
           <ClipboardButtonWithFeedback :text-to-copy="localPassword.Password" />
