@@ -7,6 +7,7 @@ export interface AppSettings {
   includeSymbols: boolean;
   includeLowercase: boolean;
   includeUppercase: boolean;
+  includeNumbers: boolean;
 }
 
 const defaultSettings: AppSettings = {
@@ -16,6 +17,7 @@ const defaultSettings: AppSettings = {
   includeSymbols: true,
   includeLowercase: true,
   includeUppercase: true,
+  includeNumbers: true,
 };
 
 export class StorageService {

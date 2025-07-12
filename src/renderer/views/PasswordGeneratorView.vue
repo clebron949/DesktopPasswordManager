@@ -7,6 +7,7 @@ const password = ref<string>("");
 const passwordLength = ref<number>(12);
 const includeLowercase = ref<boolean>();
 const includeUppercase = ref<boolean>();
+const includeNumbers = ref<boolean>();
 const includeSymbols = ref<boolean>();
 
 onMounted(() => {
@@ -15,6 +16,7 @@ onMounted(() => {
       passwordLength.value = settings.passwordLength;
       includeLowercase.value = settings.includeLowercase;
       includeUppercase.value = settings.includeUppercase;
+      includeNumbers.value = settings.includeNumbers;
       includeSymbols.value = settings.includeSymbols;
       generatePassword();
     }
@@ -22,12 +24,13 @@ onMounted(() => {
 });
 
 watch(
-  [passwordLength, includeLowercase, includeUppercase, includeSymbols],
+  [passwordLength, includeLowercase, includeUppercase, includeNumbers, includeSymbols],
   () => {
     IpcService.saveSettings({
       passwordLength: passwordLength.value,
       includeLowercase: includeLowercase.value,
       includeUppercase: includeUppercase.value,
+      includeNumbers: includeNumbers.value,
       includeSymbols: includeSymbols.value,
     });
   },
@@ -41,6 +44,9 @@ const generatePassword = () => {
   }
   if (includeUppercase.value) {
     characters += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  }
+  if (includeNumbers.value) {
+    characters += "0123456789";
   }
   if (includeSymbols.value) {
     characters += "!@#$%^&*()_+-=[]{}|;:,.<>?";
@@ -155,6 +161,17 @@ const passwordStrength = computed(() => {
         class="mr-2 size-4 accent-[#005185] focus:ring-2 focus:ring-[#005185]"
       />
       <label for="uppercase" class="text-sm">Include Uppercase (A-Z)</label>
+    </div>
+
+    <div class="mb-4">
+      <input
+        type="checkbox"
+        id="numbers"
+        v-model="includeNumbers"
+        @change="generatePassword"
+        class="mr-2 size-4 accent-[#005185] focus:ring-2 focus:ring-[#005185]"
+      />
+      <label for="numbers" class="text-sm">Include Numbers (0-9)</label>
     </div>
 
     <div class="mb-6">
