@@ -1,6 +1,7 @@
 import { DatabaseProvider } from "./DatabaseProvider";
 import { IDatabaseRepository } from "./IDatabaseRepository";
-import { SQLiteService } from "./SQLiteRepository";
+import { MySQLRepository } from "./MySQLRepository";
+import { SQLiteRepository } from "./SQLiteRepository";
 
 export class DatabaseFactory {
   private static dbInstance: IDatabaseRepository;
@@ -11,12 +12,14 @@ export class DatabaseFactory {
 
   static createDatabaseRepository(
     dbType: DatabaseProvider,
-    connectionString: string,
+    connectionString: string
   ): IDatabaseRepository {
     switch (dbType) {
       case DatabaseProvider.SQLite:
-        this.dbInstance = SQLiteService.getInstance(connectionString);
+        this.dbInstance = SQLiteRepository.getInstance(connectionString);
         break;
+      case DatabaseProvider.MySQL:
+        this.dbInstance = MySQLRepository.getInstance(connectionString);
       default:
         throw new Error(`Unsupported database type: ${dbType}`);
     }
@@ -27,14 +30,14 @@ export class DatabaseFactory {
 
   static handleChangeDatabaseRepository(
     dbProvider: DatabaseProvider,
-    connectionString: string,
+    connectionString: string
   ): IDatabaseRepository {
     if (this.dbInstance) {
       this.dbInstance.close();
     }
     this.dbInstance = this.createDatabaseRepository(
       dbProvider,
-      connectionString,
+      connectionString
     );
     return this.dbInstance;
   }

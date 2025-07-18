@@ -2,19 +2,19 @@ import sqlite3, { Database } from "sqlite3";
 import { Password } from "../types/password";
 import { IDatabaseRepository } from "./IDatabaseRepository";
 
-export class SQLiteService implements IDatabaseRepository {
-  private static instance: SQLiteService;
+export class SQLiteRepository implements IDatabaseRepository {
+  private static instance: SQLiteRepository;
   private db: Database;
 
   constructor(connectionString: string) {
     this.db = new sqlite3.Database(connectionString);
   }
 
-  static getInstance(path: string): SQLiteService {
-    if (!SQLiteService.instance) {
-      SQLiteService.instance = new SQLiteService(path);
+  static getInstance(path: string): SQLiteRepository {
+    if (!SQLiteRepository.instance) {
+      SQLiteRepository.instance = new SQLiteRepository(path);
     }
-    return SQLiteService.instance;
+    return SQLiteRepository.instance;
   }
 
   getPasswords(): Promise<Password[]> {
@@ -106,6 +106,7 @@ export class SQLiteService implements IDatabaseRepository {
         if (err) {
           reject(err);
         } else {
+          this.db = null as unknown as Database;
           resolve();
         }
       });
