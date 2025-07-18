@@ -2,17 +2,13 @@
 import { ref, onMounted } from "vue";
 import EditDatabaseModal from "../components/modals/EditDatabaseModal.vue";
 import { Database } from "../typings/database";
+import { DatabaseProvider } from "../typings/DatabaseProvider";
 import { useAppStore } from "../stores/appSettingsStore";
 import DeleteModal from "../components/modals/DeleteModal.vue";
 import DeleteIcon from "../components/icons/DeleteIcon.vue";
 import EditIcon from "../components/icons/EditIcon.vue";
 import Tooltip from "../components/Tooltip.vue";
 import PlusCircleIcon from "../components/icons/PlusCircleIcon.vue";
-
-enum DatabaseProvider {
-  SQLite,
-  MySQL,
-}
 
 const appStore = useAppStore();
 
@@ -35,7 +31,7 @@ function addNewDatabase() {
   const newDatabase: Database = {
     id: 0, // Simple ID generation for demo purposes
     name: "",
-    type: "",
+    type: DatabaseProvider[DatabaseProvider.SQLite], // Default type
     connectionString: "",
   };
   openEditModal(newDatabase);

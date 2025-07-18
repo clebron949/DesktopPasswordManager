@@ -31,19 +31,17 @@ const defaultInputClasses =
 </script>
 
 <template>
-  <div>
-    <label
-      v-if="props.label"
-      for="name"
-      class="block mb-1 text-sm font-medium text-gray-700"
-      >{{ props.label }}</label
-    >
-    <input
-      v-model="localValue"
-      :id="props.id"
-      :name="props.id"
-      type="text"
-      :class="[defaultInputClasses, inputClass]"
-    />
-  </div>
+  <label
+    v-if="props.label"
+    for="name"
+    class="block mb-1 text-sm font-medium text-gray-700"
+    >{{ props.label }}</label
+  >
+  <input
+    v-model="localValue"
+    :id="props.id"
+    :name="props.id"
+    type="text"
+    :class="[defaultInputClasses, inputClass]"
+  />
 </template>

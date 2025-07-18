@@ -3,6 +3,9 @@ import { ref, watch } from "vue";
 import DialogModal from "./DialogModal.vue";
 import Input from "../forms/Input.vue";
 import { Database } from "../../typings/database";
+import Select from "../forms/Select.vue";
+import { DatabaseProvider } from "../../typings/DatabaseProvider";
+import FolderIcon from "../icons/FolderIcon.vue";
 
 // --- Props Definition ---
 interface EditDatabaseModalProps {
@@ -90,14 +93,29 @@ watch(
         <Input id="name" label="Name" v-model="form.name" />
       </div>
       <div>
-        <Input id="type" label="Type" v-model="form.type" />
+        <label class="block mb-1 text-sm font-medium text-gray-700">Type</label>
+        <Select
+          v-model="form.type"
+          input-class="w-full py-2"
+          :options="
+            Object.keys(DatabaseProvider).filter((key) => isNaN(Number(key)))
+          "
+        />
       </div>
       <div>
-        <Input
-          id="connectionString"
-          label="Connection String"
-          v-model="form.connectionString"
-        />
+        <label class="block mb-1 text-sm font-medium text-gray-700"
+          >Connection String</label
+        >
+        <div class="flex gap-2">
+          <Input
+            id="connectionString"
+            v-model="form.connectionString"
+            input-class="grow"
+          />
+          <button v-if="form.type === DatabaseProvider[DatabaseProvider.SQLite]" type="button" class="btn-primary text-xs py-0.5 px-2 rounded">
+            <FolderIcon class="size-4" />
+          </button>
+        </div>
       </div>
     </form>
   </DialogModal>
