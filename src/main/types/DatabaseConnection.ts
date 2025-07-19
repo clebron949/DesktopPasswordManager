@@ -3,6 +3,6 @@ import { DatabaseProvider } from "../database/DatabaseProvider";
 export interface DatabaseConnection {
   id: number;
   name: string;
-  dbType: DatabaseProvider;
+  dbType: string;
   connectionString: string;
 }

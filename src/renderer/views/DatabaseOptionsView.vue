@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import EditDatabaseModal from "../components/modals/EditDatabaseModal.vue";
-import { Database } from "../typings/database";
+import { DatabaseConnection } from "../typings/database";
 import { DatabaseProvider } from "../typings/DatabaseProvider";
 import { useAppStore } from "../stores/appSettingsStore";
 import DeleteModal from "../components/modals/DeleteModal.vue";
@@ -14,35 +14,30 @@ const appStore = useAppStore();
 
 const isModalOpen = ref(false);
 const isDeleteModalOpen = ref(false);
-const selectedDatabase = ref<Database | null>(null);
-const databases = ref<Database[]>([]);
+const selectedDatabase = ref<DatabaseConnection | null>(null);
+const databases = ref<DatabaseConnection[]>([]);
 
 onMounted(async () => {
   const providers = await appStore.getDatabaseProviders();
-  databases.value = providers.map((db) => ({
-    id: db.id,
-    name: db.name,
-    type: DatabaseProvider[db.dbType],
-    connectionString: db.connectionString,
-  }));
+  databases.value = providers
 });
 
 function addNewDatabase() {
-  const newDatabase: Database = {
+  const newDatabase: DatabaseConnection = {
     id: 0, // Simple ID generation for demo purposes
     name: "",
-    type: DatabaseProvider[DatabaseProvider.SQLite], // Default type
+    dbType: DatabaseProvider[DatabaseProvider.SQLite], // Default type
     connectionString: "",
   };
   openEditModal(newDatabase);
 }
 
-function openEditModal(database: Database) {
+function openEditModal(database: DatabaseConnection) {
   selectedDatabase.value = database;
   isModalOpen.value = true;
 }
 
-function handleSave(updatedDatabase: Database) {
+function handleSave(updatedDatabase: DatabaseConnection) {
   const index = databases.value.findIndex((db) => db.id === updatedDatabase.id);
   if (index !== -1) {
     databases.value[index] = updatedDatabase;
@@ -52,6 +47,9 @@ function handleSave(updatedDatabase: Database) {
     }
     databases.value.push(updatedDatabase);
   }
+  appStore.setDatabaseProvider(updatedDatabase).catch((error) => {
+    console.error("Error saving database provider:", error);
+  });
   console.log("Saving database:", JSON.stringify(updatedDatabase, null, 2));
   isModalOpen.value = false;
 }
@@ -64,7 +62,7 @@ function handleCancel() {
 function handleDeleteConfirm() {
   if (selectedDatabase.value) {
     databases.value = databases.value.filter(
-      (db) => db.id !== selectedDatabase.value!.id,
+      (db) => db.id !== selectedDatabase.value!.id
     );
   }
   isDeleteModalOpen.value = false;
@@ -129,7 +127,7 @@ function handleDeleteCancel() {
               <div class="truncate text-xs">{{ database.name }}</div>
             </td>
             <td class="px-4 py-2">
-              <div class="truncate text-xs">{{ database.type }}</div>
+              <div class="truncate text-xs">{{ database.dbType }}</div>
             </td>
             <td class="px-4 py-2">
               <div class="truncate text-xs">

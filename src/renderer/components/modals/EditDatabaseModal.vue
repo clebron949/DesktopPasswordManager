@@ -2,7 +2,7 @@
 import { ref, watch } from "vue";
 import DialogModal from "./DialogModal.vue";
 import Input from "../forms/Input.vue";
-import { Database } from "../../typings/database";
+import { DatabaseConnection } from "../../typings/database";
 import Select from "../forms/Select.vue";
 import { DatabaseProvider } from "../../typings/DatabaseProvider";
 import FolderIcon from "../icons/FolderIcon.vue";
@@ -10,7 +10,7 @@ import FolderIcon from "../icons/FolderIcon.vue";
 // --- Props Definition ---
 interface EditDatabaseModalProps {
   modelValue: boolean; // v-model
-  database: Database | null;
+  database: DatabaseConnection | null;
   title?: string;
   cancelButtonText?: string;
   saveButtonText?: string;
@@ -29,7 +29,7 @@ const props = withDefaults(defineProps<EditDatabaseModalProps>(), {
 // --- Emits Definition ---
 const emit = defineEmits<{
   (e: "update:modelValue", value: boolean): void;
-  (e: "save", data: Database): void;
+  (e: "save", data: DatabaseConnection): void;
   (e: "cancel"): void;
 }>();
 
@@ -38,17 +38,17 @@ const isOpen = ref(props.modelValue);
 const modalId = ref(`edit-modal-${Math.random().toString(36).substring(2, 9)}`);
 
 // Local state for the form to avoid mutating props directly
-const form = ref<Database>({
+const form = ref<DatabaseConnection>({
   id: 0, // Default ID, will be set when editing an existing database
   name: "",
-  type: "",
+  dbType: "",
   connectionString: "",
 });
 
 const handleSave = () => {
   if (
     form.value.name !== "" ||
-    form.value.type !== "" ||
+    form.value.dbType !== "" ||
     form.value.connectionString !== ""
   ) {
     console.log("Saving Database:", JSON.stringify(form.value, null, 2));
@@ -69,10 +69,25 @@ watch(
     if (newValue && props.database) {
       form.value = { ...props.database };
     } else {
-      form.value = { id: 0, name: "", type: "", connectionString: "" };
+      form.value = { id: 0, name: "", dbType: "", connectionString: "" };
     }
-  },
+  }
 );
+
+const openFolderDialog = async () => {
+  try {
+    const folderPath = await window.api.settings.openFolderDialog();
+    if (folderPath) {
+      form.value.connectionString =
+        (await window.api.settings.joinPaths(
+          folderPath,
+          "password-manager.db"
+        )) ?? "";
+    }
+  } catch (error) {
+    console.error("Error opening folder dialog:", error);
+  }
+};
 </script>
 
 <template>
@@ -95,7 +110,7 @@ watch(
       <div>
         <label class="block mb-1 text-sm font-medium text-gray-700">Type</label>
         <Select
-          v-model="form.type"
+          v-model="form.dbType"
           input-class="w-full py-2"
           :options="
             Object.keys(DatabaseProvider).filter((key) => isNaN(Number(key)))
@@ -112,7 +127,12 @@ watch(
             v-model="form.connectionString"
             input-class="grow"
           />
-          <button v-if="form.type === DatabaseProvider[DatabaseProvider.SQLite]" type="button" class="btn-primary text-xs py-0.5 px-2 rounded">
+          <button
+            v-if="form.dbType === DatabaseProvider[DatabaseProvider.SQLite]"
+            type="button"
+            class="btn-primary text-xs py-0.5 px-2 rounded"
+            @click="openFolderDialog"
+          >
             <FolderIcon class="size-4" />
           </button>
         </div>

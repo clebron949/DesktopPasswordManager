@@ -29,7 +29,7 @@ const defaultSettings: AppSettings = {
   defaultdbConnection: {
     id: 1,
     name: "Local",
-    dbType: DatabaseProvider.SQLite,
+    dbType: DatabaseProvider[DatabaseProvider.SQLite],
     connectionString: dbPath,
   },
 };

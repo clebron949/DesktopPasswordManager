@@ -11,7 +11,10 @@ export class SQLiteRepository implements IDatabaseRepository {
   }
 
   static getInstance(path: string): SQLiteRepository {
-    if (!SQLiteRepository.instance) {
+    if (
+      !SQLiteRepository.instance ||
+      !SQLiteRepository.instance.db // If db is null, create a new instance
+    ) {
       SQLiteRepository.instance = new SQLiteRepository(path);
     }
     return SQLiteRepository.instance;

@@ -1,6 +1,6 @@
-export interface Database {
+export interface DatabaseConnection {
   id: number;
   name: string;
-  type: string;
+  dbType: string;
   connectionString: string;
 }

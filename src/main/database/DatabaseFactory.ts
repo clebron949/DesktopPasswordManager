@@ -14,12 +14,20 @@ export class DatabaseFactory {
     dbType: DatabaseProvider,
     connectionString: string
   ): IDatabaseRepository {
+    if (typeof dbType === "string") {
+      if (dbType in DatabaseProvider) {
+        dbType = DatabaseProvider[dbType as keyof typeof DatabaseProvider];
+      } else {
+        throw new Error(`Unsupported database type: ${dbType}`);
+      }
+    }
     switch (dbType) {
       case DatabaseProvider.SQLite:
         this.dbInstance = SQLiteRepository.getInstance(connectionString);
         break;
       case DatabaseProvider.MySQL:
         this.dbInstance = MySQLRepository.getInstance(connectionString);
+        break;
       default:
         throw new Error(`Unsupported database type: ${dbType}`);
     }
