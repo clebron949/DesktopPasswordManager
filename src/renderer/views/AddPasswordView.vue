@@ -380,4 +380,3 @@ const handlePasswordPin = async () => {
     </div>
   </div>
 </template>
-
