@@ -8,6 +8,7 @@ export class MySQLRepository implements IDatabaseRepository {
   private db: mysql.Connection | null = null;
 
   constructor(connectionString: string) {
+    console.log("Creating MySQLRepository instance with connection string:", connectionString);
     this.connectionString = connectionString;
   }
 
@@ -45,14 +46,15 @@ export class MySQLRepository implements IDatabaseRepository {
   ): Promise<number> {
     const connection = await this.getConnection();
     const sql = `
-      INSERT INTO Passwords (Name, Username, Password, Url)
-      VALUES (?, ?, ?, ?)
+      INSERT INTO Passwords (Name, Username, Password, Url, IsPinned)
+      VALUES (?, ?, ?, ?, ?)
     `;
     const [result] = await connection.execute(sql, [
       password.Name,
       password.Username,
       password.Password,
       password.Url,
+      password.IsPinned ? 1 : 0, // Convert boolean to MySQL TINYINT
     ]);
     return (result as mysql.ResultSetHeader).insertId;
   }
@@ -86,14 +88,15 @@ export class MySQLRepository implements IDatabaseRepository {
   async createDatabase(): Promise<void> {
     const connection = await this.getConnection();
     const sql = `
-        CREATE TABLE IF NOT EXISTS Passwords (
+      CREATE TABLE IF NOT EXISTS Passwords (
         Id INT AUTO_INCREMENT PRIMARY KEY,
         Name VARCHAR(255) NOT NULL,
         Username VARCHAR(255) NOT NULL,
         Password VARCHAR(255) NOT NULL,
         Url VARCHAR(255),
-        OnCreated DATETIME DEFAULT CURRENT_TIMESTAMP,
-        OnModified DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        IsPinned TINYINT(1) DEFAULT 0,
+        OnCreated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        OnModified TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
       );
     `;
     await connection.execute(sql);
