@@ -125,7 +125,7 @@ export async function createMenu() {
   ];
 
   // Add DevTools menu item in development
-  if (process.env.NODE_ENV !== "production") {
+  if (process.env.NODE_ENV === "development") {
     template.push({
       label: "Debug",
       submenu: [

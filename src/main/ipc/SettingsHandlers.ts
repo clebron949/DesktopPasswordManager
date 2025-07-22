@@ -1,5 +1,6 @@
 import { ipcMain, dialog, BrowserWindow } from "electron";
 import { StorageService, AppSettings } from "../services/LocalStorageService";
+import { join } from "path";
 
 const storageService = StorageService.getInstance();
 
@@ -39,10 +40,7 @@ export function registerSettingsHandlers() {
   ipcMain.handle(
     "settings:join-paths",
     (_, ...parts: string[]): string => {
-      return parts
-        .map((part, i) => (i === 0 ? part.replace(/\/+$/, "") : part.replace(/^\/+|\/+$/g, "")))
-        .filter(Boolean)
-        .join("/");
+      return join(...parts);
     }
   );
 }
