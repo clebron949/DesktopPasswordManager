@@ -51,8 +51,8 @@ export class SQLiteRepository implements IDatabaseRepository {
   ): Promise<number> {
     return new Promise((resolve, reject) => {
       const sql = `
-        INSERT INTO Passwords (Name, Username, Password, Url)
-        VALUES (?, ?, ?, ?)
+        INSERT INTO Passwords (Name, Username, Password, Url, IsPinned)
+        VALUES (?, ?, ?, ?, ?)
       `;
       this.db.run(
         sql,
@@ -78,7 +78,6 @@ export class SQLiteRepository implements IDatabaseRepository {
       const values = fields.map(
         (key) => password[key as keyof typeof password],
       );
-
       const sql = `UPDATE Passwords SET ${setClause} WHERE Id = ?`;
       this.db.run(sql, [...values, id], (err) => {
         if (err) {
@@ -125,6 +124,7 @@ export class SQLiteRepository implements IDatabaseRepository {
           Username TEXT NOT NULL,
           Password TEXT NOT NULL,
           Url TEXT,
+          IsPinned INTEGER DEFAULT 0,
           OnCreated TEXT DEFAULT (datetime('now')),
           OnModified TEXT DEFAULT (datetime('now'))
         );

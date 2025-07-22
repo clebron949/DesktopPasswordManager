@@ -68,6 +68,7 @@ async function importCSVFile(path: string): Promise<number> {
         Username: record.Username,
         Password: record.Password,
         Url: record.Url,
+        IsPinned: record.IsPinned || false, // Default to false if not provided
       };
       importCount = importCount + (await InsertToDatabase(password));
     }
@@ -91,6 +92,7 @@ async function importJSONFile(path: string): Promise<number> {
         Username: item.Username,
         Password: item.Password,
         Url: item.Url,
+        IsPinned: item.IsPinned || false, // Default to false if not provided
       };
       importCount = importCount + (await InsertToDatabase(password));
     }

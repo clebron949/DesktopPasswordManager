@@ -13,6 +13,7 @@ const route = useRoute();
 const router = useRouter();
 const passwordStore = usePasswordStore();
 
+const passwordInputFocused = ref(false);
 const showDeleteConfirmModal = ref(false);
 const localPassword = ref<Omit<Password, "OnModified">>({
   Id: 0,
@@ -20,25 +21,9 @@ const localPassword = ref<Omit<Password, "OnModified">>({
   Username: "",
   Password: "",
   Url: "",
+  IsPinned: false,
   OnCreated: "",
 });
-
-const loadPasswordDetails = async (id: number) => {
-  const password = await passwordStore.getPasswordById(id);
-  if (password) {
-    localPassword.value = {
-      Id: password.Id,
-      Name: password.Name,
-      Username: password.Username,
-      Password: password.Password,
-      Url: password.Url,
-      OnCreated: password.OnCreated,
-    };
-  } else {
-    console.warn(`Password with ID ${id} not found.`);
-    router.push("/");
-  }
-};
 
 onMounted(async () => {
   const id = Number(route.params.id);
@@ -61,11 +46,37 @@ watch(
         Username: "",
         Password: "",
         Url: "",
+        IsPinned: false,
         OnCreated: "",
       };
     }
   }
 );
+
+const loadPasswordDetails = async (id: number) => {
+  const password = await passwordStore.getPasswordById(id);
+  if (password) {
+    localPassword.value = {
+      Id: password.Id,
+      Name: password.Name,
+      Username: password.Username,
+      Password: password.Password,
+      Url: password.Url,
+      IsPinned: password.IsPinned,
+      OnCreated: password.OnCreated,
+    };
+  } else {
+    console.warn(`Password with ID ${id} not found.`);
+    router.push("/");
+  }
+};
+
+const getPasswordDisplay = () => {
+  if (localPassword.value.Id !== 0 && !passwordInputFocused.value) {
+    return '*'.repeat(localPassword.value.Password.length);
+  }
+  return localPassword.value.Password;
+}
 
 const handleSavePassword = async () => {
   try {
@@ -77,6 +88,7 @@ const handleSavePassword = async () => {
         Username: localPassword.value.Username,
         Password: localPassword.value.Password,
         Url: localPassword.value.Url,
+        IsPinned: localPassword.value.IsPinned,
         OnCreated: localPassword.value.OnCreated,
       });
       console.log("Password updated successfully");
@@ -90,6 +102,7 @@ const handleSavePassword = async () => {
         Username: localPassword.value.Username,
         Password: localPassword.value.Password,
         Url: localPassword.value.Url,
+        IsPinned: localPassword.value.IsPinned,
       });
       console.log("New password added successfully");
       // Refresh the passwords list in store
@@ -119,6 +132,20 @@ const handleConfirmDelete = async () => {
 const handleCancelDelete = () => {
   console.log("Delete Cancelled.");
   showDeleteConfirmModal.value = false;
+};
+
+const handlePasswordPin = async () => {
+  localPassword.value.IsPinned = !localPassword.value.IsPinned;
+  await passwordStore.updatePassword(localPassword.value.Id, {
+    Id: localPassword.value.Id,
+    Name: localPassword.value.Name,
+    Username: localPassword.value.Username,
+    Password: localPassword.value.Password,
+    Url: localPassword.value.Url,
+    IsPinned: localPassword.value.IsPinned,
+    OnCreated: localPassword.value.OnCreated,
+  });
+  await passwordStore.initializePasswords();
 };
 </script>
 
@@ -260,3 +287,4 @@ const handleCancelDelete = () => {
     </div>
   </div>
 </template>
+
