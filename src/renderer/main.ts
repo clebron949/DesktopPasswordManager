@@ -7,12 +7,14 @@ import HomeView from "./views/HomeView.vue";
 import AboutView from "./views/AboutView.vue";
 import AddPasswordView from "./views/AddPasswordView.vue";
 import PasswordGeneratorView from "./views/PasswordGeneratorView.vue";
+import DatabaseOptionsView from "./views/DatabaseOptionsView.vue";
 
 const routes = [
   { path: "/", component: HomeView },
   { path: "/about", component: AboutView },
   { path: "/add-password/:id", component: AddPasswordView },
   { path: "/password-generator", component: PasswordGeneratorView },
+  { path: "/db-options", component: DatabaseOptionsView },
 ];
 
 const router = createRouter({

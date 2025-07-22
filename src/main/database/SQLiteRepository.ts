@@ -1,44 +1,23 @@
 import sqlite3, { Database } from "sqlite3";
+import { Password } from "../types/password";
+import { IDatabaseRepository } from "./IDatabaseRepository";
 
-export interface Password {
-  Id: number;
-  Name: string;
-  Username: string;
-  Password: string;
-  Url: string;
-  IsPinned: boolean;
-  OnCreated: string;
-  OnModified: string;
-}
-
-export interface DatabaseRepository {
-  createDatabase(): Promise<void>;
-  getPasswords(): Promise<Password[]>;
-  getPasswordById(id: number): Promise<Password | undefined>;
-  insertPassword(
-    password: Omit<Password, "Id" | "OnCreated" | "OnModified">,
-  ): Promise<number>;
-  updatePassword(
-    id: number,
-    password: Partial<Omit<Password, "Id" | "OnCreated" | "OnModified">>,
-  ): Promise<void>;
-  deletePassword(id: number): Promise<void>;
-  close(): Promise<void>;
-}
-
-export class SQLiteService implements DatabaseRepository {
-  private static instance: SQLiteService;
+export class SQLiteRepository implements IDatabaseRepository {
+  private static instance: SQLiteRepository;
   private db: Database;
 
   constructor(connectionString: string) {
     this.db = new sqlite3.Database(connectionString);
   }
 
-  static getInstance(path: string): SQLiteService {
-    if (!SQLiteService.instance) {
-      SQLiteService.instance = new SQLiteService(path);
+  static getInstance(path: string): SQLiteRepository {
+    if (
+      !SQLiteRepository.instance ||
+      !SQLiteRepository.instance.db // If db is null, create a new instance
+    ) {
+      SQLiteRepository.instance = new SQLiteRepository(path);
     }
-    return SQLiteService.instance;
+    return SQLiteRepository.instance;
   }
 
   getPasswords(): Promise<Password[]> {
@@ -99,7 +78,6 @@ export class SQLiteService implements DatabaseRepository {
       const values = fields.map(
         (key) => password[key as keyof typeof password],
       );
-
       const sql = `UPDATE Passwords SET ${setClause} WHERE Id = ?`;
       this.db.run(sql, [...values, id], (err) => {
         if (err) {
@@ -130,6 +108,7 @@ export class SQLiteService implements DatabaseRepository {
         if (err) {
           reject(err);
         } else {
+          this.db = null as unknown as Database;
           resolve();
         }
       });

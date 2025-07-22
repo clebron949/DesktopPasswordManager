@@ -10,6 +10,8 @@ export default interface API {
     get(): Promise<AppSettings>;
     save(settings: Partial<AppSettings>): Promise<void>;
     reset(): Promise<void>;
+    openFolderDialog(): Promise<string | undefined>;
+    joinPaths(...parts: string[]): Promise<string | undefined>;
   };
   db:{
     getPasswords(): Promise<Password[]>;
@@ -29,6 +31,10 @@ export default interface API {
    import: {
     onCompleted: (callback: (data: ImportCompletedData) => void) => void;
     removeAllListeners: () => void;
+  };
+   navigation: {
+    onNavigateToDbOptions: (callback: () => void) => void;
+    removeNavigationListeners: () => void;
   };
 }
 

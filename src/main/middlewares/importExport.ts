@@ -2,9 +2,10 @@ import { app, BrowserWindow, Menu, dialog, ipcMain, Data } from "electron";
 import * as fs from "fs";
 import * as path from "path";
 import { parse } from "csv-parse/sync";
-import { DatabaseRepository, Password } from "../services/SQLiteService";
+import { Password } from "../types/password";
+import { DatabaseFactory } from "../database/DatabaseFactory";
 
-export async function handleFileImport(db: DatabaseRepository) {
+export async function handleFileImport() {
   const result = await dialog.showOpenDialog({
     title: "Import Data File",
     filters: [
@@ -27,10 +28,10 @@ export async function handleFileImport(db: DatabaseRepository) {
 
   switch (ext) {
     case ".csv":
-      importedCount = await importCSVFile(db, filePath);
+      importedCount = await importCSVFile(filePath);
       break;
     case ".json":
-      importedCount = await importJSONFile(db, filePath);
+      importedCount = await importJSONFile(filePath);
       break;
     default:
       dialog.showErrorBox(
@@ -51,10 +52,7 @@ export async function handleFileImport(db: DatabaseRepository) {
   }
 }
 
-async function importCSVFile(
-  db: DatabaseRepository,
-  path: string,
-): Promise<number> {
+async function importCSVFile(path: string): Promise<number> {
   let importCount = 0;
   try {
     const fileContent = fs.readFileSync(path, "utf-8");
@@ -72,7 +70,7 @@ async function importCSVFile(
         Url: record.Url,
         IsPinned: record.IsPinned || false, // Default to false if not provided
       };
-      importCount = importCount + (await InsertToDatabase(db, password));
+      importCount = importCount + (await InsertToDatabase(password));
     }
   } catch (error) {
     console.error("Error importing CSV:", error);
@@ -81,10 +79,7 @@ async function importCSVFile(
   return importCount;
 }
 
-async function importJSONFile(
-  db: DatabaseRepository,
-  path: string,
-): Promise<number> {
+async function importJSONFile(path: string): Promise<number> {
   let importCount = 0;
   try {
     const fileContent = fs.readFileSync(path, "utf-8");
@@ -99,7 +94,7 @@ async function importJSONFile(
         Url: item.Url,
         IsPinned: item.IsPinned || false, // Default to false if not provided
       };
-      importCount = importCount + (await InsertToDatabase(db, password));
+      importCount = importCount + (await InsertToDatabase(password));
     }
   } catch (error) {
     console.error("Error importing JSON:", error);
@@ -109,11 +104,11 @@ async function importJSONFile(
 }
 
 async function InsertToDatabase(
-  db: DatabaseRepository,
   password: Omit<Password, "Id" | "OnCreated" | "OnModified">,
 ): Promise<number> {
   try {
-    if (await recordExist(db, password)) {
+    const db = DatabaseFactory.getDatabaseRepository();
+    if (await recordExist(password)) {
       console.log(
         `Skipping duplicate record: ${password.Name} - ${password.Username}`,
       );
@@ -130,10 +125,10 @@ async function InsertToDatabase(
 }
 
 async function recordExist(
-  db: DatabaseRepository,
   password: Omit<Password, "Id" | "OnCreated" | "OnModified">,
 ): Promise<boolean> {
   try {
+    const db = DatabaseFactory.getDatabaseRepository();
     const passwords = await db.getPasswords();
     const existingRecord = passwords.find(
       (p) => p.Name === password.Name && p.Username === password.Username,
@@ -145,7 +140,7 @@ async function recordExist(
   }
 }
 
-export async function handleFileExport(db: DatabaseRepository) {
+export async function handleFileExport() {
   const result = await dialog.showSaveDialog({
     title: "Export Data File",
     filters: [
@@ -164,10 +159,10 @@ export async function handleFileExport(db: DatabaseRepository) {
   try {
     switch (ext) {
       case ".csv":
-        await exportToCSV(db, filePath);
+        await exportToCSV(filePath);
         break;
       case ".json":
-        await exportToJSON(db, filePath);
+        await exportToJSON(filePath);
         break;
       default:
         dialog.showErrorBox(
@@ -181,7 +176,8 @@ export async function handleFileExport(db: DatabaseRepository) {
   }
 }
 
-async function exportToCSV(db: DatabaseRepository, filePath: string) {
+async function exportToCSV(filePath: string) {
+  const db = DatabaseFactory.getDatabaseRepository();
   const passwords = await db.getPasswords();
   const csvHeader = "Name,Username,Password,Url\n";
   const csvData = passwords
@@ -198,7 +194,8 @@ async function exportToCSV(db: DatabaseRepository, filePath: string) {
   });
 }
 
-async function exportToJSON(db: DatabaseRepository, filePath: string) {
+async function exportToJSON(filePath: string) {
+  const db = DatabaseFactory.getDatabaseRepository();
   const passwords = await db.getPasswords();
   const filteredPasswords = passwords.map(
     ({ Id, OnCreated, OnModified, ...rest }) => rest,

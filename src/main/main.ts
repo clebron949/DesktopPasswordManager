@@ -1,22 +1,11 @@
 import { app, BrowserWindow, ipcMain, session } from "electron";
 import { join } from "path";
-import { mkdirSync, existsSync } from "fs"; 
+import { mkdirSync, existsSync } from "fs";
 import { registerSettingsHandlers } from "./ipc/SettingsHandlers";
 import { registerDatabaseHandlers } from "./ipc/DatabaseHandler";
 import { createMenu } from "./middlewares/ApplicationMenu";
-import { createDatabaseRepository } from "./middlewares/DatabaseRepositoryFactory";
 import { registerAppInfoHandlers } from "./ipc/AppInfoHandler";
-
-console.log(app.getAppPath())
-const basePath = join(app.getPath("userData"), "storage");
-const dbPath = join(basePath, "password-manager.db");
-console.log("Database path:", dbPath);
-const db = createDatabaseRepository("sqlite", dbPath);
-db.createDatabase();
-
-if (!existsSync(basePath)) {
-  mkdirSync(basePath, { recursive: true });
-}
+import { registerDefaultDatabase } from "./middlewares/registerDatabase";
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
@@ -39,10 +28,11 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+  registerDefaultDatabase();
   registerAppInfoHandlers();
   registerSettingsHandlers();
-  registerDatabaseHandlers(db);
-  createMenu(db);
+  registerDatabaseHandlers();
+  createMenu();
   createWindow();
 
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {

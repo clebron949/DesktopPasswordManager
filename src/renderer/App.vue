@@ -1,12 +1,26 @@
 <script setup lang="ts">
+import { onMounted, onUnmounted } from "vue";
+import { useRouter } from "vue-router";
 import PassboltLogo from "./assets/passbolt.svg";
-window.api.app.getVersion().then(version => {
-  document.title = `Password Manager v${version}`;
+
+const router = useRouter();
+
+onMounted(() => {
+  window.api.app.getVersion().then((version) => {
+    document.title = `Password Manager v${version}`;
+  });
+  window.api.navigation.onNavigateToDbOptions(() => {
+    router.push("/db-options");
+  });
+});
+
+onUnmounted(() => {
+  window.api.navigation.removeNavigationListeners();
 });
 </script>
 
 <template>
-  <div class=" h-screen flex flex-col">
+  <div class="h-screen flex flex-col">
     <nav
       className="bg-white border-b-2 border-gray-200 shadow dark:bg-gray-900"
     >
@@ -25,16 +39,20 @@ window.api.app.getVersion().then(version => {
           </span>
         </RouterLink>
         <div>
-        <RouterLink to="/add-password/0">
-          <button class="btn-primary rounded-lg px-3 py-1.5 text-xs">Add Password</button>
-        </RouterLink>
-        <RouterLink to="/password-generator">
-          <button class="btn-secondary rounded-lg px-3 py-1.5 text-xs ms-3">Generate Password</button>
-        </RouterLink>
+          <RouterLink to="/add-password/0">
+            <button class="btn-primary rounded-lg px-3 py-1.5 text-xs">
+              Add Password
+            </button>
+          </RouterLink>
+          <RouterLink to="/password-generator">
+            <button class="btn-secondary rounded-lg px-3 py-1.5 text-xs ms-3">
+              Generate Password
+            </button>
+          </RouterLink>
         </div>
       </div>
     </nav>
-    <div class=" flex-grow">
+    <div class="flex-grow">
       <main
         class="w-full h-full max-w-screen-lg mx-auto overflow-auto bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200"
       >

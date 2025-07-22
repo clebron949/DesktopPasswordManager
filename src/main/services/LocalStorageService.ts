@@ -1,4 +1,11 @@
 import storage from "electron-json-storage";
+import { DatabaseConnection } from "../types/DatabaseConnection";
+import { app } from "electron";
+import { join } from "path";
+import { DatabaseProvider } from "../database/DatabaseProvider";
+
+const basePath = join(app.getPath("userData"), "storage");
+const dbPath = join(basePath, "password-manager.db");
 
 export interface AppSettings {
   theme: "light" | "dark";
@@ -7,17 +14,24 @@ export interface AppSettings {
   includeSymbols: boolean;
   includeLowercase: boolean;
   includeUppercase: boolean;
-  includeNumbers: boolean;
+  defaultdbConnection?: DatabaseConnection;
+  dbConnections?: DatabaseConnection[];
 }
 
 const defaultSettings: AppSettings = {
   theme: "light",
-  itemsPerPage: 10,
+  itemsPerPage: 5,
   passwordLength: 12,
   includeSymbols: true,
   includeLowercase: true,
   includeUppercase: true,
-  includeNumbers: true,
+  dbConnections: [],
+  defaultdbConnection: {
+    id: 1,
+    name: "Local",
+    dbType: DatabaseProvider[DatabaseProvider.SQLite],
+    connectionString: dbPath,
+  },
 };
 
 export class StorageService {
@@ -30,9 +44,9 @@ export class StorageService {
     storage.setDataPath(path);
   }
 
-  static getInstance(path: string): StorageService {
+  static getInstance(): StorageService {
     if (!StorageService.instance) {
-      StorageService.instance = new StorageService(path);
+      StorageService.instance = new StorageService(basePath);
     }
     return StorageService.instance;
   }
@@ -44,9 +58,6 @@ export class StorageService {
           reject(error);
           return;
         }
-
-        // Provide default settings if none exist
-
         resolve({ ...defaultSettings, ...data } as AppSettings);
       });
     });
@@ -59,7 +70,7 @@ export class StorageService {
         const currentSettings = await this.getSettings();
         const updatedSettings = { ...currentSettings, ...settings };
 
-        storage.set(this.SETTINGS_KEY, updatedSettings, (error) => {
+        storage.set(this.SETTINGS_KEY, updatedSettings, (error: Error) => {
           if (error) {
             reject(error);
             return;
@@ -74,7 +85,7 @@ export class StorageService {
 
   async resetSettings(): Promise<void> {
     return new Promise((resolve, reject) => {
-      storage.remove(this.SETTINGS_KEY, (error) => {
+      storage.remove(this.SETTINGS_KEY, (error: Error) => {
         if (error) {
           reject(error);
           return;
