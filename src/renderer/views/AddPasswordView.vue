@@ -8,6 +8,8 @@ import LeftArrowIcon from "../components/icons/LeftArrowIcon.vue";
 import DeleteIcon from "../components/icons/DeleteIcon.vue";
 import ClipboardButtonWithFeedback from "../components/ClipboardButtonWithFeedback.vue";
 import Tooltip from "../components/Tooltip.vue";
+import PinIcon from "../components/icons/PinIcon.vue";
+import PinAngleIcon from "../components/icons/PinAngleIcon.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -283,6 +285,97 @@ const handlePasswordPin = async () => {
             {{ localPassword.Id && localPassword.Id !== 0 ? "Update" : "Save" }}
           </button>
         </div>
+    <div class="space-y-4">
+      <div class="flex items-center gap-1">
+        <button @click="handlePasswordPin">
+          <PinIcon
+            v-if="!localPassword.IsPinned"
+            class="size-4 fill-secondary"
+          />
+          <PinAngleIcon v-else class="size-4 fill-secondary" />
+        </button>
+        <span v-if="!localPassword.IsPinned" class="text-sm">Pin</span>
+        <span v-else class="text-sm">Pinned</span>
+      </div>
+      <!-- Name Field -->
+      <div>
+        <label for="name" class="block text-xs font-medium text-gray-900">
+          Name
+        </label>
+        <div class="mt-2 flex items-center">
+          <input
+            type="text"
+            name="name"
+            id="name"
+            v-model="localPassword.Name"
+            class="block w-full rounded-md bg-white px-3 py-2 text-xs text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-secondary"
+          />
+          <ClipboardButtonWithFeedback :text-to-copy="localPassword.Name" />
+        </div>
+      </div>
+
+      <!-- Username Field -->
+      <div>
+        <label for="username" class="block text-xs font-medium text-gray-900">
+          Username
+        </label>
+        <div class="mt-2 flex items-center">
+          <input
+            type="text"
+            name="username"
+            id="username"
+            v-model="localPassword.Username"
+            class="block w-full rounded-md bg-white px-3 py-2 text-xs text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-secondary"
+          />
+          <ClipboardButtonWithFeedback :text-to-copy="localPassword.Username" />
+        </div>
+      </div>
+
+      <!-- Password Field -->
+      <div>
+        <label for="password" class="block text-xs font-medium text-gray-900">
+          Password
+        </label>
+        <div class="mt-2 flex items-center">
+          <input
+            type="text"
+            name="password"
+            id="password"
+            :value="getPasswordDisplay()"
+            @focus="passwordInputFocused = true"
+            @blur="passwordInputFocused = false"
+            @input="localPassword.Password = ($event.target as HTMLInputElement)?.value"
+            class="block w-full rounded-md bg-white px-3 py-2 text-xs text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-secondary"
+          />
+          <ClipboardButtonWithFeedback :text-to-copy="localPassword.Password" />
+        </div>
+      </div>
+
+      <!-- URL Field -->
+      <div>
+        <label for="url" class="block text-xs font-medium text-gray-900">
+          URL
+        </label>
+        <div class="mt-2 flex items-center">
+          <input
+            type="text"
+            name="url"
+            id="url"
+            v-model="localPassword.Url"
+            class="block w-full rounded-md bg-white px-3 py-2 text-xs text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-secondary"
+          />
+          <ClipboardButtonWithFeedback :text-to-copy="localPassword.Url" />
+        </div>
+      </div>
+
+      <div class="flex justify-end">
+        <button
+          type="button"
+          @click="handleSavePassword"
+          class="mt-6 rounded-md btn-primary px-3 py-2 text-xs font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+        >
+          {{ localPassword.Id && localPassword.Id !== 0 ? "Update" : "Save" }}
+        </button>
       </div>
     </div>
   </div>
