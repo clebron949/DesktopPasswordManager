@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import PasswordTable from "../components/PasswordTable.vue";
-import SearchIcon from "../assets/search.svg";
+import SearchIcon from "../components/icons/SearchIcon.vue";
 import { usePasswordStore } from "../stores/PasswordStore";
 import { computed, ref, onMounted, onUnmounted } from "vue";
 import { Password } from "../typings/password";
@@ -65,13 +65,11 @@ function UpdateCurrentPage(page: number, items: number) {
         type="text"
         name="account-number"
         id="account-number"
-        class="col-start-1 row-start-1 block w-full rounded-md bg-white py-1.5 pl-3 pr-10 text-xs text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-secondary sm:pr-9 sm:text-sm/6"
+        class="col-start-1 row-start-1 block w-full rounded-md dark:text-white dark:bg-gray-700 bg-white py-1.5 pl-3 pr-10 text-xs text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-secondary sm:pr-9 sm:text-sm/6"
         placeholder="Search passwords ..."
       />
-      <img
-        :src="SearchIcon"
-        alt="Search"
-        class="pointer-events-none col-start-1 row-start-1 mr-3 size-4 self-center justify-self-end text-gray-400 sm:size-4"
+      <SearchIcon
+        class="pointer-events-none col-start-1 row-start-1 mr-3 size-4 self-center justify-self-end text-gray-400 dark:text-white sm:size-4"
       />
     </div>
     <div class="flex-grow mt-3">
