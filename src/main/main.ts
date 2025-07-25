@@ -25,12 +25,19 @@ async function createWindow() {
   });
 
   // Persist window size before closing
-  mainWindow.on("close", async () => {
+  mainWindow.on("close", (event) => {
     const [winWidth, winHeight] = mainWindow.getSize();
-    await storageService.saveSettings({
-      windowWidth: winWidth,
-      windowHeight: winHeight,
-    });
+    // Prevent window from closing immediately
+    event.preventDefault();
+    storageService
+      .saveSettings({
+        windowWidth: winWidth,
+        windowHeight: winHeight,
+      })
+      .then(() => {
+        // Now actually close the window
+        mainWindow.destroy();
+      });
   });
 
   if (process.env.NODE_ENV === "development") {
