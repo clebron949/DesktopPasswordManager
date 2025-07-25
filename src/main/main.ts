@@ -6,17 +6,31 @@ import { registerDatabaseHandlers } from "./ipc/DatabaseHandler";
 import { createMenu } from "./middlewares/ApplicationMenu";
 import { registerAppInfoHandlers } from "./ipc/AppInfoHandler";
 import { registerDefaultDatabase } from "./middlewares/registerDatabase";
+import { StorageService } from "./services/LocalStorageService";
 
-function createWindow() {
+async function createWindow() {
+  const storageService = StorageService.getInstance();
+  const settings = await storageService.getSettings();
+  const width = settings.windowWidth ?? 700;
+  const height = settings.windowHeight ?? 580;
   const mainWindow = new BrowserWindow({
-    width: 700,
-    height: 580,
+    width,
+    height,
     webPreferences: {
       preload: join(__dirname, "preload.js"),
       nodeIntegration: false,
       contextIsolation: true,
     },
     icon: join(app.getAppPath(), "static", "favicon.ico"),
+  });
+
+  // Persist window size before closing
+  mainWindow.on("close", async () => {
+    const [winWidth, winHeight] = mainWindow.getSize();
+    await storageService.saveSettings({
+      windowWidth: winWidth,
+      windowHeight: winHeight,
+    });
   });
 
   if (process.env.NODE_ENV === "development") {
@@ -27,13 +41,13 @@ function createWindow() {
   }
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   registerDefaultDatabase();
   registerAppInfoHandlers();
   registerSettingsHandlers();
   registerDatabaseHandlers();
   createMenu();
-  createWindow();
+  await createWindow();
 
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
     callback({
