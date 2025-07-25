@@ -16,6 +16,8 @@ export interface AppSettings {
   includeUppercase: boolean;
   defaultdbConnection?: DatabaseConnection;
   dbConnections?: DatabaseConnection[];
+  windowWidth?: number; 
+  windowHeight?: number; 
 }
 
 const defaultSettings: AppSettings = {
@@ -32,6 +34,8 @@ const defaultSettings: AppSettings = {
     dbType: DatabaseProvider[DatabaseProvider.SQLite],
     connectionString: dbPath,
   },
+  windowWidth: 700, 
+  windowHeight: 580, 
 };
 
 export class StorageService {
