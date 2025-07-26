@@ -105,27 +105,36 @@ const openFolderDialog = async () => {
     <!-- Modal Body (Form) -->
     <form @submit.prevent="handleSave" class="space-y-4">
       <div>
-        <Input id="name" label="Name" v-model="form.name" />
+        <Input
+          id="name"
+          label="Name"
+          v-model="form.name"
+          input-class="w-full rounded-md bg-white dark:bg-slate-800 px-3 py-2 text-xs text-gray-900 dark:text-slate-50 outline outline-1 -outline-offset-1 outline-gray-300 dark:outline-slate-600 placeholder:text-gray-400 dark:placeholder:text-slate-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-secondary dark:focus:outline-secondary"
+        />
       </div>
       <div>
-        <label class="block mb-1 text-sm font-medium text-gray-700">Type</label>
+        <label
+          class="block mb-1 text-sm font-medium text-gray-700 dark:text-slate-50"
+          >Type</label
+        >
         <Select
           v-model="form.dbType"
-          input-class="w-full py-2"
+          input-class="w-full py-2 rounded-md bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-50 outline outline-1 -outline-offset-1 outline-gray-300 dark:outline-slate-600 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-secondary dark:focus:outline-secondary"
           :options="
             Object.keys(DatabaseProvider).filter((key) => isNaN(Number(key)))
           "
         />
       </div>
       <div>
-        <label class="block mb-1 text-sm font-medium text-gray-700"
+        <label
+          class="block mb-1 text-sm font-medium text-gray-700 dark:text-slate-50"
           >Connection String</label
         >
         <div class="flex gap-2">
           <Input
             id="connectionString"
             v-model="form.connectionString"
-            input-class="grow"
+            input-class="grow rounded-md bg-white dark:bg-slate-800 px-3 py-2 text-xs text-gray-900 dark:text-slate-50 outline outline-1 -outline-offset-1 outline-gray-300 dark:outline-slate-600 placeholder:text-gray-400 dark:placeholder:text-slate-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-secondary dark:focus:outline-secondary"
           />
           <button
             v-if="form.dbType === DatabaseProvider[DatabaseProvider.SQLite]"

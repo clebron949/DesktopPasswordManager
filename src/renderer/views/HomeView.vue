@@ -65,7 +65,7 @@ function UpdateCurrentPage(page: number, items: number) {
         type="text"
         name="account-number"
         id="account-number"
-        class="col-start-1 row-start-1 block w-full rounded-md dark:text-white dark:bg-gray-700 bg-white py-1.5 pl-3 pr-10 text-xs text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-secondary sm:pr-9 sm:text-sm/6"
+        class="col-start-1 row-start-1 block w-full rounded-md dark:text-white dark:bg-slate-800 bg-white py-1.5 pl-3 pr-10 text-xs text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-secondary sm:pr-9 sm:text-sm/6"
         placeholder="Search passwords ..."
       />
       <SearchIcon

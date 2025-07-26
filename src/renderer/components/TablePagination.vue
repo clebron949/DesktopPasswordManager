@@ -67,12 +67,12 @@ const prevPage = () => {
 <template>
   <!-- Pagination Controls -->
   <nav
-    class="flex items-center justify-between border-t border-gray-200 dark:bg-gray-800 bg-white px-4 py-3 sm:px-6"
+    class="flex items-center justify-between border-t-2 border-gray-200 dark:border-gray-700 dark:bg-gray-800 bg-white px-4 py-3 sm:px-6"
     aria-label="Pagination"
   >
     <!-- Left Section: Showing X to Y of Z results -->
     <div class="flex-1 hidden sm:block">
-      <p class="text-xs text-tertiary">
+      <p class="text-xs text-tertiary dark:text-slate-50">
         Showing
         <span class="text-xs font-medium">
           {{
@@ -97,19 +97,19 @@ const prevPage = () => {
     <div class="flex items-center justify-center flex-1">
       <label
         for="items-per-page"
-        class="text-xs text-tertiary mr-2 whitespace-nowrap"
+        class="text-xs text-tertiary dark:text-slate-50 mr-2 whitespace-nowrap"
         >Show</label
       >
       <select
         id="items-per-page"
         v-model.number="itemsPerPage"
-        class="block max-w-[80px] appearance-none rounded-md border border-gray-300 bg-white py-0.5 pl-3 pr-8 text-xs font-medium text-secondary shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-primary sm:leading-6"
+        class="block max-w-[80px] appearance-none rounded-md border border-gray-300 bg-white dark:bg-slate-600 py-0.5 pl-3 pr-8 text-xs font-medium text-secondary dark:text-slate-50 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-secondary sm:leading-6"
       >
         <option v-for="option in perPageOptions" :key="option" :value="option">
           {{ option === length ? "All" : option }}
         </option>
       </select>
-      <span class="text-xs text-tertiary ml-2 whitespace-nowrap">per page</span>
+      <span class="text-xs text-tertiary dark:text-slate-50 ml-2 whitespace-nowrap">per page</span>
     </div>
 
     <!-- Right Section: Page navigation buttons -->
@@ -117,14 +117,14 @@ const prevPage = () => {
       <button
         @click="prevPage"
         :disabled="currentPage === 1 || itemsPerPage === length"
-        class="relative inline-flex items-center rounded-md border border-tertiary/50 bg-white px-3 py-1.5 text-xs font-medium text-tertiary hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+        class="relative inline-flex items-center rounded-md border border-tertiary/50 bg-white dark:bg-slate-600 px-3 py-1.5 text-xs font-medium text-tertiary dark:text-slate-50 hover:bg-gray-50 dark:hover:bg-slate-500 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         Previous
       </button>
       <button
         @click="nextPage"
         :disabled="currentPage === totalPages || itemsPerPage === length"
-        class="relative ml-3 inline-flex items-center rounded-md border border-tertiary/50 bg-white px-3 py-1.5 text-xs font-medium text-tertiary hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+        class="relative ml-3 inline-flex items-center rounded-md border border-tertiary/50 bg-white dark:bg-slate-600 px-3 py-1.5 text-xs font-medium text-tertiary dark:text-slate-50 hover:bg-gray-50 dark:hover:bg-slate-500 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         Next
       </button>
@@ -141,7 +141,7 @@ const prevPage = () => {
         'mx-1 px-3 py-1 rounded-md text-xs',
         currentPage === page
           ? 'bg-primary text-white'
-          : 'bg-gray-200 text-secondary hover:bg-gray-300',
+          : 'bg-gray-200 dark:bg-slate-600 text-secondary dark:text-slate-50 hover:bg-gray-300 dark:hover:bg-slate-500',
       ]"
     >
       {{ page }}

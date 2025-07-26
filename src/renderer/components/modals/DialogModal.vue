@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, onMounted, onUnmounted, nextTick } from 'vue';
+import { ref, watch, onMounted, onUnmounted, nextTick } from "vue";
 
 // --- Props Definition ---
 interface ConfirmationModalProps {
@@ -15,20 +15,20 @@ interface ConfirmationModalProps {
 
 const props = withDefaults(defineProps<ConfirmationModalProps>(), {
   modelValue: false,
-  title: 'Confirm Action',
-  cancelButtonText: 'Cancel',
-  confirmButtonText: 'Confirm',
+  title: "Confirm Action",
+  cancelButtonText: "Cancel",
+  confirmButtonText: "Confirm",
   showCloseButton: true,
   closeOnOverlayClick: true,
-  modalClass: '',
+  modalClass: "",
 });
 
 // --- Emits Definition ---
 // Emits for v-model update and for confirmation/cancellation
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: boolean): void; // For v-model
-  (e: 'confirm'): void;
-  (e: 'cancel'): void;
+  (e: "update:modelValue", value: boolean): void; // For v-model
+  (e: "confirm"): void;
+  (e: "cancel"): void;
 }>();
 
 // --- State and Refs ---
@@ -50,10 +50,10 @@ watch(
           modalContent.value.focus(); // Focus the modal content for accessibility
         }
       });
-      document.body.classList.add('overflow-hidden'); // Prevent scrolling body
+      document.body.classList.add("overflow-hidden"); // Prevent scrolling body
     } else {
       // Modal closed
-      document.body.classList.remove('overflow-hidden');
+      document.body.classList.remove("overflow-hidden");
       if (returnFocusEl) {
         returnFocusEl.focus(); // Return focus to the element that opened the modal
       }
@@ -64,20 +64,20 @@ watch(
 
 // --- Methods ---
 const openModal = () => {
-  emit('update:modelValue', true);
+  emit("update:modelValue", true);
 };
 
 const closeModal = () => {
-  emit('update:modelValue', false);
+  emit("update:modelValue", false);
 };
 
 const confirm = () => {
-  emit('confirm');
+  emit("confirm");
   closeModal();
 };
 
 const cancel = () => {
-  emit('cancel');
+  emit("cancel");
   closeModal();
 };
 
@@ -89,19 +89,19 @@ const handleOverlayClick = () => {
 
 // --- Keyboard Event Listener for Escape Key ---
 const handleEscapeKey = (event: KeyboardEvent) => {
-  if (event.key === 'Escape' && isOpen.value) {
+  if (event.key === "Escape" && isOpen.value) {
     cancel();
   }
 };
 
 onMounted(() => {
-  document.addEventListener('keydown', handleEscapeKey);
+  document.addEventListener("keydown", handleEscapeKey);
 });
 
 onUnmounted(() => {
-  document.removeEventListener('keydown', handleEscapeKey);
+  document.removeEventListener("keydown", handleEscapeKey);
   // Ensure body scroll is reset if component unmounts while modal is open
-  document.body.classList.remove('overflow-hidden');
+  document.body.classList.remove("overflow-hidden");
 });
 
 // --- Focus Trapping (Advanced but Good Practice) ---
@@ -118,7 +118,7 @@ const handleKeyDown = (event: KeyboardEvent) => {
     focusableElements.length - 1
   ] as HTMLElement;
 
-  if (event.key === 'Tab') {
+  if (event.key === "Tab") {
     if (event.shiftKey) {
       /* shift + tab */
       if (document.activeElement === firstFocusableEl) {
@@ -138,9 +138,9 @@ const handleKeyDown = (event: KeyboardEvent) => {
 // Add keydown listener to the modal content itself
 watch(isOpen, (newVal) => {
   if (newVal && modalContent.value) {
-    modalContent.value.addEventListener('keydown', handleKeyDown);
+    modalContent.value.addEventListener("keydown", handleKeyDown);
   } else if (!newVal && modalContent.value) {
-    modalContent.value.removeEventListener('keydown', handleKeyDown);
+    modalContent.value.removeEventListener("keydown", handleKeyDown);
   }
 });
 </script>
@@ -183,7 +183,7 @@ watch(isOpen, (newVal) => {
           <div
             v-if="isOpen"
             ref="modalContent"
-            class="bg-white rounded-lg shadow-xl max-w-md w-full p-6 relative"
+            class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6 relative text-gray-900 dark:text-slate-50"
             :class="modalClass"
             tabindex="-1"
           >
@@ -191,7 +191,7 @@ watch(isOpen, (newVal) => {
             <button
               v-if="showCloseButton"
               @click="cancel"
-              class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#005185] rounded-full p-1"
+              class="absolute top-4 right-4 text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#005185] dark:focus:ring-secondary rounded-full p-1"
               aria-label="Close modal"
             >
               <svg
@@ -214,14 +214,17 @@ watch(isOpen, (newVal) => {
             <div v-if="title" class="mb-4">
               <h3
                 :id="`${modalId}-title`"
-                class="text-xl font-bold text-[#005185]"
+                class="text-xl font-bold text-[#005185] dark:text-slate-50"
               >
                 {{ title }}
               </h3>
             </div>
 
             <!-- Modal Body (Default Slot) -->
-            <div :id="`${modalId}-description`" class="mb-6 text-gray-700">
+            <div
+              :id="`${modalId}-description`"
+              class="mb-6 text-gray-700 dark:text-slate-50"
+            >
               <slot></slot>
             </div>
 
@@ -229,13 +232,13 @@ watch(isOpen, (newVal) => {
             <div class="flex justify-end space-x-3">
               <button
                 @click="cancel"
-                class="px-5 py-2 rounded-lg border border-[#6B7A8B] text-[#6B7A8B] text-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-[#6B7A8B] focus:ring-offset-2 transition duration-200"
+                class="px-5 py-2 rounded-lg border border-[#6B7A8B] text-[#6B7A8B] dark:border-slate-500 dark:text-slate-300 text-sm hover:bg-gray-100 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-[#6B7A8B] dark:focus:ring-secondary focus:ring-offset-2 transition duration-200"
               >
                 {{ cancelButtonText }}
               </button>
               <button
                 @click="confirm"
-                class="px-5 py-2 rounded-lg bg-[#D40000] text-white text-sm font-semibold hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-[#D40000] focus:ring-offset-2 transition duration-200"
+                class="px-5 py-2 rounded-lg bg-[#D40000] dark:bg-red-700 text-white text-sm font-semibold hover:bg-red-700 dark:hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-[#D40000] dark:focus:ring-red-700 focus:ring-offset-2 transition duration-200"
               >
                 {{ confirmButtonText }}
               </button>
