@@ -153,11 +153,11 @@ function handleDeleteCancel() {
                   @click="openEditModal(database)"
                 >
                   <Tooltip text="Edit">
-                    <EditIcon class-name="size-4 dark:fill-slate-50" />
+                    <EditIcon class-name="size-4 dark:fill-slate-300" />
                   </Tooltip>
                 </button>
                 <button
-                  class="ms-2 text-red-600 dark:text-slate-100 hover:bg-gray-100 dark:hover:bg-slate-600 p-1 rounded"
+                  class="ms-2 text-red-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-600 p-1 rounded"
                   @click="
                     () => {
                       isDeleteModalOpen = true;
