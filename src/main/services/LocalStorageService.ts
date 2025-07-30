@@ -11,6 +11,7 @@ export interface AppSettings {
   theme: "light" | "dark";
   itemsPerPage: number;
   passwordLength: number;
+  includeNumbers: boolean;
   includeSymbols: boolean;
   includeLowercase: boolean;
   includeUppercase: boolean;
@@ -24,6 +25,7 @@ const defaultSettings: AppSettings = {
   theme: "light",
   itemsPerPage: 5,
   passwordLength: 12,
+  includeNumbers: true,
   includeSymbols: true,
   includeLowercase: true,
   includeUppercase: true,

@@ -54,7 +54,7 @@ watch(
     @confirm="handleConfirmDelete"
     @cancel="handleCancelDelete"
   >
-    <p class="text-gray-700 text-sm">
+    <p class="text-gray-700 dark:text-slate-50 text-sm">
       {{ props.text }}
     </p>
   </DialogModal>

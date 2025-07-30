@@ -22,7 +22,7 @@ onUnmounted(() => {
 <template>
   <div class="h-screen flex flex-col">
     <nav
-      className="bg-white border-b-2 border-gray-200 shadow dark:bg-gray-900"
+      className="bg-white dark:bg-gray-800 border-b-2 border-gray-200 dark:border-gray-700 shadow "
     >
       <div
         className="max-w-screen-lg flex flex-wrap items-center justify-between mx-auto px-4 pt-2 pb-4"

@@ -19,7 +19,7 @@ const databases = ref<DatabaseConnection[]>([]);
 
 onMounted(async () => {
   const providers = await appStore.getDatabaseProviders();
-  databases.value = providers
+  databases.value = providers;
 });
 
 function addNewDatabase() {
@@ -78,8 +78,10 @@ function handleDeleteCancel() {
 <template>
   <div class="space-y-3">
     <div>
-      <h1 class="text-base font-semibold text-gray-800">Options</h1>
-      <p class="text-xs text-gray-600 mt-2">
+      <h1 class="text-base font-semibold text-gray-800 dark:text-slate-50">
+        Options
+      </h1>
+      <p class="text-xs text-gray-600 dark:text-slate-400 mt-2">
         Manage your databases and add new ones as needed.
       </p>
     </div>
@@ -94,58 +96,68 @@ function handleDeleteCancel() {
       </Tooltip>
     </div>
     <div
-      class="relative py-3 w-full overflow-hidden rounded-lg border border-gray-200 bg-white shadow-md"
+      class="relative py-3 w-full overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-md"
     >
       <table class="w-full table-fixed">
         <thead>
           <tr>
             <!-- Set explicit widths for the columns that should not expand -->
             <th
-              class="w-28 px-4 py-2 text-left text-xs font-medium text-gray-600"
+              class="w-28 px-4 py-2 text-left text-xs font-medium text-gray-600 dark:text-slate-400"
             >
               Name
             </th>
             <th
-              class="w-20 px-4 py-2 text-left text-xs font-medium text-gray-600"
+              class="w-20 px-4 py-2 text-left text-xs font-medium text-gray-600 dark:text-slate-400"
             >
               Type
             </th>
             <!-- This column gets the remaining space -->
-            <th class="px-4 py-2 text-left text-xs font-medium text-gray-600">
+            <th
+              class="px-4 py-2 text-left text-xs font-medium text-gray-600 dark:text-slate-400"
+            >
               Connection String
             </th>
             <th
-              class="w-24 px-4 py-2 text-left text-xs font-medium text-gray-600"
+              class="w-24 px-4 py-2 text-left text-xs font-medium text-gray-600 dark:text-slate-400"
             >
               Actions
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="database in databases" :key="database.id">
+          <tr
+            v-for="database in databases"
+            :key="database.id"
+            class="hover:bg-gray-50 dark:hover:bg-slate-700"
+          >
             <td class="px-4 py-2">
-              <div class="truncate text-xs">{{ database.name }}</div>
+              <div class="truncate text-xs text-gray-900 dark:text-slate-50">
+                {{ database.name }}
+              </div>
             </td>
             <td class="px-4 py-2">
-              <div class="truncate text-xs">{{ database.dbType }}</div>
+              <div class="truncate text-xs text-gray-900 dark:text-slate-50">
+                {{ database.dbType }}
+              </div>
             </td>
             <td class="px-4 py-2">
-              <div class="truncate text-xs">
+              <div class="truncate text-xs text-gray-900 dark:text-slate-50">
                 {{ database.connectionString }}
               </div>
             </td>
             <td class="px-4 py-2">
               <div class="whitespace-nowrap text-xs">
                 <button
-                  class="text-secondary hover:bg-gray-100 p-1 rounded"
+                  class="text-secondary hover:bg-gray-100 dark:hover:bg-slate-600 p-1 rounded"
                   @click="openEditModal(database)"
                 >
                   <Tooltip text="Edit">
-                    <EditIcon class-name="size-4" />
+                    <EditIcon class-name="size-4 dark:fill-slate-300" />
                   </Tooltip>
                 </button>
                 <button
-                  class="ms-2 text-red-600 hover:bg-gray-100 p-1 rounded"
+                  class="ms-2 text-red-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-600 p-1 rounded"
                   @click="
                     () => {
                       isDeleteModalOpen = true;

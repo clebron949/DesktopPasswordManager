@@ -23,17 +23,17 @@ const getPasswordInitials = (name: string) => {
   <div>
     <div v-if="hasPinnedPasswords">
       <div class="ms-3 flex items-center gap-x-1">
-        <PinAngleIcon class="size-3 fill-gray-500" />
-        <span class="text-xs text-gray-400">Pinned</span>
+        <PinAngleIcon class="size-3 fill-gray-500 dark:fill-slate-50" />
+        <span class="text-xs text-gray-400 dark:text-slate-50">Pinned</span>
       </div>
-      <ul role="list" class="divide-y divide-gray-100 mb-4">
+      <ul role="list" class="divide-y divide-gray-100 dark:divide-gray-700 mb-4">
         <li
           v-for="password in passwords.filter((p) => p.IsPinned)"
           :key="password.Id"
         >
           <router-link
             :to="`/add-password/${password.Id}`"
-            class="flex items-center gap-x-6 px-3 py-3 cursor-pointer hover:bg-slate-100 hover:rounded-md"
+            class="flex items-center gap-x-6 px-3 py-1.5 my-1.5 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-600 hover:rounded-md"
           >
             <span
               class="inline-flex size-7 items-center justify-center rounded-full bg-gray-500"
@@ -51,19 +51,19 @@ const getPasswordInitials = (name: string) => {
       </ul>
     </div>
 
-    <ul role="list" class="divide-y divide-gray-100">
+    <ul role="list" class="divide-y divide-gray-100 dark:divide-gray-700">
       <li
         v-for="password in passwords.filter((p) => !p.IsPinned)"
         :key="password.Id"
       >
         <router-link
           :to="`/add-password/${password.Id}`"
-          class="flex items-center gap-x-6 px-3 py-3 cursor-pointer hover:bg-slate-100 hover:rounded-md"
+          class="flex items-center gap-x-6 px-3 py-1.5 my-1.5 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-600 hover:rounded-md"
         >
           <span
             class="inline-flex size-7 items-center justify-center rounded-full bg-gray-500"
           >
-            <span class="text-[10px] font-medium text-white">
+            <span class="text-[10px] font-medium text-white overflow-hidden">
               {{ getPasswordInitials(password.Name) }}
             </span>
           </span>

@@ -24,7 +24,13 @@ onMounted(() => {
 });
 
 watch(
-  [passwordLength, includeLowercase, includeUppercase, includeNumbers, includeSymbols],
+  [
+    passwordLength,
+    includeLowercase,
+    includeUppercase,
+    includeNumbers,
+    includeSymbols,
+  ],
   () => {
     IpcService.saveSettings({
       passwordLength: passwordLength.value,
@@ -99,10 +105,10 @@ const passwordStrength = computed(() => {
 
 <template>
   <div
-    class="font-sans max-w-md mx-auto p-8 border border-gray-200 rounded-xl shadow-lg bg-white text-gray-800"
+    class="font-sans max-w-md mx-auto p-8 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg bg-white dark:bg-gray-800 text-gray-800 dark:text-slate-50"
   >
     <h2
-      class="text-center text-xl font-extrabold text-[#005185] mb-8 tracking-wide"
+      class="text-center text-xl font-extrabold text-[#005185] dark:text-slate-50 mb-8 tracking-wide"
     >
       Password Generator
     </h2>
@@ -110,7 +116,10 @@ const passwordStrength = computed(() => {
     <div class="mb-6 relative flex items-end">
       <div class="flex-grow">
         <!-- Input field for password -->
-        <label for="password-display" class="block text-sm font-semibold mb-2">
+        <label
+          for="password-display"
+          class="block text-sm font-semibold mb-2 dark:text-slate-50"
+        >
           Generated Password:
         </label>
         <input
@@ -118,7 +127,7 @@ const passwordStrength = computed(() => {
           type="text"
           :value="password"
           readonly
-          class="w-full py-1.5 px-3 pr-12 text-sm border border-gray-300 rounded-lg bg-gray-50 cursor-text shadow-sm focus:outline-none focus:ring-2 focus:ring-[#005185]"
+          class="w-full py-1.5 px-3 pr-12 text-sm border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-800 cursor-text shadow-sm focus:outline-none focus:ring-2 focus:ring-[#005185] dark:focus:ring-secondary dark:text-slate-50"
         />
       </div>
 
@@ -127,7 +136,10 @@ const passwordStrength = computed(() => {
     </div>
 
     <div class="mb-6">
-      <label for="length" class="block text-sm font-semibold mb-2">
+      <label
+        for="length"
+        class="block text-sm font-semibold mb-2 dark:text-slate-50"
+      >
         Password Length: {{ passwordLength }}
       </label>
       <input
@@ -137,7 +149,7 @@ const passwordStrength = computed(() => {
         min="6"
         max="30"
         @input="generatePassword"
-        class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer range-shadow accent-[#005185]"
+        class="w-full h-2 bg-gray-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer range-shadow accent-[#005185] dark:accent-secondary"
       />
     </div>
 
@@ -147,9 +159,11 @@ const passwordStrength = computed(() => {
         id="lowercase"
         v-model="includeLowercase"
         @change="generatePassword"
-        class="mr-2 size-4 accent-[#005185] focus:ring-2 focus:ring-[#005185]"
+        class="mr-2 size-4 accent-[#005185] dark:accent-secondary focus:ring-2 focus:ring-[#005185] dark:focus:ring-secondary"
       />
-      <label for="lowercase" class="text-sm">Include Lowercase (a-z)</label>
+      <label for="lowercase" class="text-sm dark:text-slate-50"
+        >Include Lowercase (a-z)</label
+      >
     </div>
 
     <div class="mb-4">
@@ -158,9 +172,11 @@ const passwordStrength = computed(() => {
         id="uppercase"
         v-model="includeUppercase"
         @change="generatePassword"
-        class="mr-2 size-4 accent-[#005185] focus:ring-2 focus:ring-[#005185]"
+        class="mr-2 size-4 accent-[#005185] dark:accent-secondary focus:ring-2 focus:ring-[#005185] dark:focus:ring-secondary"
       />
-      <label for="uppercase" class="text-sm">Include Uppercase (A-Z)</label>
+      <label for="uppercase" class="text-sm dark:text-slate-50"
+        >Include Uppercase (A-Z)</label
+      >
     </div>
 
     <div class="mb-4">
@@ -169,9 +185,11 @@ const passwordStrength = computed(() => {
         id="numbers"
         v-model="includeNumbers"
         @change="generatePassword"
-        class="mr-2 size-4 accent-[#005185] focus:ring-2 focus:ring-[#005185]"
+        class="mr-2 size-4 accent-[#005185] dark:accent-secondary focus:ring-2 focus:ring-[#005185] dark:focus:ring-secondary"
       />
-      <label for="numbers" class="text-sm">Include Numbers (0-9)</label>
+      <label for="numbers" class="text-sm dark:text-slate-50"
+        >Include Numbers (0-9)</label
+      >
     </div>
 
     <div class="mb-6">
@@ -180,21 +198,23 @@ const passwordStrength = computed(() => {
         id="symbols"
         v-model="includeSymbols"
         @change="generatePassword"
-        class="mr-2 size-4 accent-[#005185] focus:ring-2 focus:ring-[#005185]"
+        class="mr-2 size-4 accent-[#005185] dark:accent-secondary focus:ring-2 focus:ring-[#005185] dark:focus:ring-secondary"
       />
-      <label for="symbols" class="text-sm">Include Symbols (!@#$%...)</label>
+      <label for="symbols" class="text-sm dark:text-slate-50"
+        >Include Symbols (!@#$%...)</label
+      >
     </div>
 
     <button
       @click="generatePassword"
-      class="w-full py-3 px-4 bg-[#005185] text-white font-bold text-md rounded-lg shadow-md hover:bg-[#003a60] focus:outline-none focus:ring-2 focus:ring-[#005185] focus:ring-offset-2 transition duration-200 ease-in-out transform hover:-translate-y-0.5 active:translate-y-0 active:bg-[#002d4f]"
+      class="w-full py-3 px-4 bg-[#005185] dark:bg-secondary text-white font-bold text-md rounded-lg shadow-md hover:bg-[#003a60] dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-[#005185] dark:focus:ring-secondary focus:ring-offset-2 transition duration-200 ease-in-out transform hover:-translate-y-0.5 active:translate-y-0 active:bg-[#002d4f] dark:active:bg-slate-700"
     >
       Generate New Password
     </button>
 
     <div
       v-if="passwordStrength.text"
-      class="mt-8 text-center text-sm font-extrabold p-3 rounded-md bg-gray-100"
+      class="mt-8 text-center text-sm font-extrabold p-3 rounded-md bg-gray-100 dark:bg-slate-700"
     >
       <span :class="passwordStrength.colorClass">
         Strength: {{ passwordStrength.text }}

@@ -27,14 +27,14 @@ const localValue = computed({
 });
 
 const defaultInputClasses =
-  "block w-full rounded-md bg-white px-3 py-2 text-xs text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-secondary";
+  "block w-full rounded-md bg-white px-3 py-2 text-xs text-gray-900 dark:text-slate-50 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-secondary";
 </script>
 
 <template>
   <label
     v-if="props.label"
     for="name"
-    class="block mb-1 text-sm font-medium text-gray-700"
+    class="block mb-1 text-sm font-medium text-gray-700 dark:text-slate-50"
     >{{ props.label }}</label
   >
   <input
