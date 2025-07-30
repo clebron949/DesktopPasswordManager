@@ -23,6 +23,10 @@
             "snap"
         ]
     },
+    "mac": {
+        "target": "dmg",
+        "icon": "src/main/static/favicon.icns"
+    },
     "files": [
         {
             "from": "build/main",
