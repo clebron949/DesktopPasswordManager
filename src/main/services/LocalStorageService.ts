@@ -17,9 +17,16 @@ export interface AppSettings {
   includeUppercase: boolean;
   defaultdbConnection?: DatabaseConnection;
   dbConnections?: DatabaseConnection[];
-  windowWidth?: number; 
-  windowHeight?: number; 
+  windowWidth?: number;
+  windowHeight?: number;
 }
+
+const defaultConnection: DatabaseConnection = {
+  id: 1,
+  name: "Local",
+  dbType: DatabaseProvider[DatabaseProvider.SQLite],
+  connectionString: dbPath,
+};
 
 const defaultSettings: AppSettings = {
   theme: "light",
@@ -29,15 +36,12 @@ const defaultSettings: AppSettings = {
   includeSymbols: true,
   includeLowercase: true,
   includeUppercase: true,
-  dbConnections: [],
-  defaultdbConnection: {
-    id: 1,
-    name: "Local",
-    dbType: DatabaseProvider[DatabaseProvider.SQLite],
-    connectionString: dbPath,
-  },
-  windowWidth: 700, 
-  windowHeight: 580, 
+  dbConnections: [
+   defaultConnection
+  ],
+  defaultdbConnection: defaultConnection,
+  windowWidth: 700,
+  windowHeight: 580,
 };
 
 export class StorageService {

@@ -48,6 +48,8 @@ async function createWindow() {
   }
 }
 
+app.setName("Password Manager");
+
 app.whenReady().then(async () => {
   registerDefaultDatabase();
   registerAppInfoHandlers();
