@@ -6,7 +6,9 @@ import { registerDatabaseHandlers } from "./ipc/DatabaseHandler";
 import { createMenu } from "./middlewares/ApplicationMenu";
 import { registerAppInfoHandlers } from "./ipc/AppInfoHandler";
 import { registerDefaultDatabase } from "./middlewares/registerDatabase";
+import { registerDefaultSettings } from "./middlewares/registerDefaultSettings";
 import { StorageService } from "./services/LocalStorageService";
+import { register } from "module";
 
 async function createWindow() {
   const storageService = StorageService.getInstance();
@@ -51,6 +53,7 @@ async function createWindow() {
 app.setName("Password Manager");
 
 app.whenReady().then(async () => {
+  registerDefaultSettings();
   registerDefaultDatabase();
   registerAppInfoHandlers();
   registerSettingsHandlers();
