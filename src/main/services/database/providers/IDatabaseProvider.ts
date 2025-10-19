@@ -1,6 +1,6 @@
-import { Password } from "../types/password";
+import { Password } from "../../../types/Password";
 
-export interface IDatabaseRepository {
+export interface IDatabaseProvider {
   createDatabase(): Promise<void>;
   getPasswords(): Promise<Password[]>;
   getPasswordById(id: number): Promise<Password | undefined>;

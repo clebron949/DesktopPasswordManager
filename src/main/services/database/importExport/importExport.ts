@@ -1,9 +1,9 @@
-import { app, BrowserWindow, Menu, dialog, ipcMain, Data } from "electron";
+import { BrowserWindow, dialog } from "electron";
 import * as fs from "fs";
 import * as path from "path";
 import { parse } from "csv-parse/sync";
-import { Password } from "../types/password";
-import { DatabaseFactory } from "../database/DatabaseFactory";
+import { Password } from "../../../types/Password";
+import { DatabaseFactory } from "../providers/DatabaseProviderFactory";
 
 export async function handleFileImport() {
   const result = await dialog.showOpenDialog({
@@ -107,7 +107,7 @@ async function InsertToDatabase(
   password: Omit<Password, "Id" | "OnCreated" | "OnModified">,
 ): Promise<number> {
   try {
-    const db = DatabaseFactory.getDatabaseRepository();
+    const db = DatabaseFactory.getDatabaseProvider();
     if (await recordExist(password)) {
       console.log(
         `Skipping duplicate record: ${password.Name} - ${password.Username}`,
@@ -128,7 +128,7 @@ async function recordExist(
   password: Omit<Password, "Id" | "OnCreated" | "OnModified">,
 ): Promise<boolean> {
   try {
-    const db = DatabaseFactory.getDatabaseRepository();
+    const db = DatabaseFactory.getDatabaseProvider();
     const passwords = await db.getPasswords();
     const existingRecord = passwords.find(
       (p) => p.Name === password.Name && p.Username === password.Username,
@@ -177,7 +177,7 @@ export async function handleFileExport() {
 }
 
 async function exportToCSV(filePath: string) {
-  const db = DatabaseFactory.getDatabaseRepository();
+  const db = DatabaseFactory.getDatabaseProvider();
   const passwords = await db.getPasswords();
   const csvHeader = "Name,Username,Password,Url\n";
   const csvData = passwords
@@ -195,7 +195,7 @@ async function exportToCSV(filePath: string) {
 }
 
 async function exportToJSON(filePath: string) {
-  const db = DatabaseFactory.getDatabaseRepository();
+  const db = DatabaseFactory.getDatabaseProvider();
   const passwords = await db.getPasswords();
   const filteredPasswords = passwords.map(
     ({ Id, OnCreated, OnModified, ...rest }) => rest,

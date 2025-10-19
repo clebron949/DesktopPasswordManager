@@ -1,9 +1,9 @@
 import mysql from "mysql2/promise";
-import { Password } from "../types/password";
-import { IDatabaseRepository } from "./IDatabaseRepository";
+import { Password } from "../../../types/Password";
+import { IDatabaseProvider } from "./IDatabaseProvider";
 
-export class MySQLRepository implements IDatabaseRepository {
-  private static instance: MySQLRepository;
+export class MySQLProvider implements IDatabaseProvider {
+  private static instance: MySQLProvider;
   private connectionString: string;
   private db: mysql.Connection | null = null;
 
@@ -12,11 +12,11 @@ export class MySQLRepository implements IDatabaseRepository {
     this.connectionString = connectionString;
   }
 
-  static getInstance(connectionString: string): MySQLRepository {
-    if (!MySQLRepository.instance) {
-      MySQLRepository.instance = new MySQLRepository(connectionString);
+  static getInstance(connectionString: string): MySQLProvider {
+    if (!MySQLProvider.instance) {
+      MySQLProvider.instance = new MySQLProvider(connectionString);
     }
-    return MySQLRepository.instance;
+    return MySQLProvider.instance;
   }
 
   private async getConnection(): Promise<mysql.Connection> {

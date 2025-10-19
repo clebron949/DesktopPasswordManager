@@ -1,9 +1,10 @@
 import { ipcMain, dialog, BrowserWindow } from "electron";
-import { StorageService, AppSettings } from "../services/LocalStorageService";
 import { join } from "path";
-import { createMenu } from "../middlewares/ApplicationMenu"; // Added to allow menu refresh after settings save
+import { LocalStorage } from "../helpers/LocalStorage";
+import { AppSettings } from "../types/AppSettings";
+import { createMenu } from "../services/appMenu/ApplicationMenu";
 
-const storageService = StorageService.getInstance();
+const storageService = LocalStorage.getInstance();
 
 export function registerSettingsHandlers() {
   ipcMain.handle("settings:get", async (): Promise<AppSettings> => {

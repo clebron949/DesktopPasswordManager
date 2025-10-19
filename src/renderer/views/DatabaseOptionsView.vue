@@ -38,12 +38,14 @@ function openEditModal(database: DatabaseConnection) {
 }
 
 function handleSave(updatedDatabase: DatabaseConnection) {
+  // try and find the index for the selectedDatabase
   const index = databases.value.findIndex((db) => db.id === updatedDatabase.id);
   if (index !== -1) {
+    // if the index exist update the value
     databases.value[index] = updatedDatabase;
   } else {
     if (updatedDatabase.id === 0) {
-      updatedDatabase.id = Math.max(...databases.value.map((db) => db.id)) + 1;
+      updatedDatabase.id = getNextAvailbleID();
     }
     databases.value.push(updatedDatabase);
   }
@@ -52,6 +54,10 @@ function handleSave(updatedDatabase: DatabaseConnection) {
   });
   console.log("Saving database:", JSON.stringify(updatedDatabase, null, 2));
   isModalOpen.value = false;
+}
+
+function getNextAvailbleID() {
+  return Math.max(...databases.value.map((db) => db.id)) + 1;
 }
 
 function handleCancel() {
@@ -87,50 +93,34 @@ function handleDeleteCancel() {
     </div>
     <div class="flex justify-end">
       <Tooltip text="Add db">
-        <button
-          @click="addNewDatabase"
-          class="btn-primary rounded-lg px-1.5 py-1 text-xs"
-        >
+        <button @click="addNewDatabase" class="btn-primary rounded-lg px-1.5 py-1 text-xs">
           <PlusCircleIcon class-name="size-5" />
         </button>
       </Tooltip>
     </div>
     <div
-      class="relative py-3 w-full overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-md"
-    >
+      class="relative py-3 w-full overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-md">
       <table class="w-full table-fixed">
         <thead>
           <tr>
             <!-- Set explicit widths for the columns that should not expand -->
-            <th
-              class="w-28 px-4 py-2 text-left text-xs font-medium text-gray-600 dark:text-slate-400"
-            >
+            <th class="w-28 px-4 py-2 text-left text-xs font-medium text-gray-600 dark:text-slate-400">
               Name
             </th>
-            <th
-              class="w-20 px-4 py-2 text-left text-xs font-medium text-gray-600 dark:text-slate-400"
-            >
+            <th class="w-20 px-4 py-2 text-left text-xs font-medium text-gray-600 dark:text-slate-400">
               Type
             </th>
             <!-- This column gets the remaining space -->
-            <th
-              class="px-4 py-2 text-left text-xs font-medium text-gray-600 dark:text-slate-400"
-            >
+            <th class="px-4 py-2 text-left text-xs font-medium text-gray-600 dark:text-slate-400">
               Connection String
             </th>
-            <th
-              class="w-24 px-4 py-2 text-left text-xs font-medium text-gray-600 dark:text-slate-400"
-            >
+            <th class="w-24 px-4 py-2 text-left text-xs font-medium text-gray-600 dark:text-slate-400">
               Actions
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr
-            v-for="database in databases"
-            :key="database.id"
-            class="hover:bg-gray-50 dark:hover:bg-slate-700"
-          >
+          <tr v-for="database in databases" :key="database.id" class="hover:bg-gray-50 dark:hover:bg-slate-700">
             <td class="px-4 py-2">
               <div class="truncate text-xs text-gray-900 dark:text-slate-50">
                 {{ database.name }}
@@ -148,10 +138,8 @@ function handleDeleteCancel() {
             </td>
             <td class="px-4 py-2">
               <div class="whitespace-nowrap text-xs">
-                <button
-                  class="text-secondary hover:bg-gray-100 dark:hover:bg-slate-600 p-1 rounded"
-                  @click="openEditModal(database)"
-                >
+                <button class="text-secondary hover:bg-gray-100 dark:hover:bg-slate-600 p-1 rounded"
+                  @click="openEditModal(database)">
                   <Tooltip text="Edit">
                     <EditIcon class-name="size-4 dark:fill-slate-300" />
                   </Tooltip>
@@ -163,8 +151,7 @@ function handleDeleteCancel() {
                       isDeleteModalOpen = true;
                       selectedDatabase = database;
                     }
-                  "
-                >
+                  ">
                   <Tooltip text="Delete">
                     <DeleteIcon class-name="size-4" />
                   </Tooltip>
@@ -177,22 +164,11 @@ function handleDeleteCancel() {
     </div>
   </div>
 
-  <EditDatabaseModal
-    v-model="isModalOpen"
-    title="Edit Database"
-    :database="selectedDatabase"
-    confirm-button-text="Save"
-    cancel-button-text="Cancel"
-    @save="handleSave"
-    @cancel="handleCancel"
-  />
+  <EditDatabaseModal v-model="isModalOpen" title="Edit Database" :database="selectedDatabase" confirm-button-text="Save"
+    cancel-button-text="Cancel" @save="handleSave" @cancel="handleCancel" />
 
-  <DeleteModal
-    v-model="isDeleteModalOpen"
-    :id="selectedDatabase?.id"
+  <DeleteModal v-model="isDeleteModalOpen" :id="selectedDatabase?.id"
     text="Are you sure you want to delete this database? This action cannot be undone."
-    :title="`Confirm Delete for ${selectedDatabase?.name}`"
-    @confirm="handleDeleteConfirm"
-    @cancel="handleDeleteCancel"
-  />
+    :title="`Confirm Delete for ${selectedDatabase?.name}`" @confirm="handleDeleteConfirm"
+    @cancel="handleDeleteCancel" />
 </template>

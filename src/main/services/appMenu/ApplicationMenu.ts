@@ -1,10 +1,11 @@
 import { app, BrowserWindow, Menu, nativeImage } from "electron";
-import { handleFileExport, handleFileImport } from "./importExport";
 import { join } from "path";
 import * as fs from "fs";
-import { AppSettings, StorageService } from "../services/LocalStorageService";
-import { DatabaseFactory } from "../database/DatabaseFactory";
-import { DatabaseProvider } from "../database/DatabaseProvider";
+import { LocalStorage } from "../../helpers/LocalStorage";
+import { DatabaseFactory } from "../database/providers/DatabaseProviderFactory";
+import { DatabaseProvider } from "../database/providers/DatabaseProviders";
+import { handleFileImport, handleFileExport } from "../database/importExport/importExport";
+import { AppSettings } from "../../types/AppSettings";
 
 function getMenuItemIcon(baseName: string) {
   const img = nativeImage.createEmpty();
@@ -27,10 +28,10 @@ function getMenuItemIcon(baseName: string) {
 }
 
 export async function createMenu() {
-  const storageService = StorageService.getInstance();
+  const storageService = LocalStorage.getInstance();
   const settings: AppSettings = await storageService.getSettings();
   const dbConnections = settings.dbConnections ?? [];
-  const defaultId = settings.defaultdbConnection?.id;
+  const defaultId = settings.selectedDBConnectionID;
 
   const connectSubmenu: Electron.MenuItemConstructorOptions[] =
     dbConnections.map((conn) => ({
@@ -40,11 +41,11 @@ export async function createMenu() {
       click: async () => {
         // Update default connection in settings
         console.log("Setting default connection to:", conn.connectionString);
-        await storageService.saveSettings({ defaultdbConnection: conn });
+        await storageService.saveSettings({ selectedDBConnectionID: conn.id });
         // Optionally, notify renderer or reload DB connection here
-        const db = DatabaseFactory.getDatabaseRepository();
+        const db = DatabaseFactory.getDatabaseProvider();
         await db.close().catch((error) => console.error(error)); // Close current DB connection
-        DatabaseFactory.createDatabaseRepository(
+        DatabaseFactory.createDatabaseProvider(
           DatabaseProvider[conn.dbType as keyof typeof DatabaseProvider],
           conn.connectionString
         );

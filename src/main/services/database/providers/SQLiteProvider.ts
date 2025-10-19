@@ -1,23 +1,23 @@
 import sqlite3, { Database } from "sqlite3";
-import { Password } from "../types/password";
-import { IDatabaseRepository } from "./IDatabaseRepository";
+import { IDatabaseProvider } from "./IDatabaseProvider";
+import { Password } from "../../../types/Password";
 
-export class SQLiteRepository implements IDatabaseRepository {
-  private static instance: SQLiteRepository;
+export class SQLiteProvider implements IDatabaseProvider {
+  private static instance: SQLiteProvider;
   private db: Database;
 
   constructor(connectionString: string) {
     this.db = new sqlite3.Database(connectionString);
   }
 
-  static getInstance(path: string): SQLiteRepository {
+  static getInstance(path: string): SQLiteProvider {
     if (
-      !SQLiteRepository.instance ||
-      !SQLiteRepository.instance.db // If db is null, create a new instance
+      !SQLiteProvider.instance ||
+      !SQLiteProvider.instance.db // If db is null, create a new instance
     ) {
-      SQLiteRepository.instance = new SQLiteRepository(path);
+      SQLiteProvider.instance = new SQLiteProvider(path);
     }
-    return SQLiteRepository.instance;
+    return SQLiteProvider.instance;
   }
 
   getPasswords(): Promise<Password[]> {

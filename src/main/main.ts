@@ -1,17 +1,47 @@
-import { app, BrowserWindow, ipcMain, session } from "electron";
+import { app, BrowserWindow, session } from "electron";
+import { existsSync } from "fs";
 import { join } from "path";
-import { mkdirSync, existsSync } from "fs";
+import { LocalStorage } from "./helpers/LocalStorage";
+import { DatabaseFactory } from "./services/database/providers/DatabaseProviderFactory";
+import { DatabaseProvider } from "./services/database/providers/DatabaseProviders";
+import { DefaultAppSettings } from "./services/appSettings/appSettingsDefaults";
 import { registerSettingsHandlers } from "./ipc/SettingsHandlers";
 import { registerDatabaseHandlers } from "./ipc/DatabaseHandler";
-import { createMenu } from "./middlewares/ApplicationMenu";
 import { registerAppInfoHandlers } from "./ipc/AppInfoHandler";
-import { registerDefaultDatabase } from "./middlewares/registerDatabase";
-import { registerDefaultSettings } from "./middlewares/registerDefaultSettings";
-import { StorageService } from "./services/LocalStorageService";
-import { register } from "module";
+import { createMenu } from "./services/appMenu/ApplicationMenu";
+
+
+async function LoadDatabase() {
+  const localStorage = LocalStorage.getInstance();
+  const settings = await localStorage.getSettings();
+  const dbConnection = settings.dbConnections?.find(db => db.id == settings.selectedDBConnectionID);
+
+  if (!dbConnection) {
+    throw Error("Could not find a defaultDatabaseConnection");
+  }
+
+  const db = DatabaseFactory.createDatabaseProvider(
+    DatabaseProvider[dbConnection.dbType as keyof typeof DatabaseProvider],
+    dbConnection.connectionString,
+  );
+
+  await db.createDatabase();
+}
+
+async function LoadDefaultAppSettings() {
+  try {
+    const localStorage = LocalStorage.getInstance();
+    if (!existsSync(DefaultAppSettings.storagePath)) {
+      await localStorage.saveSettings(DefaultAppSettings.appSettings)
+    }
+  } catch (error) {
+    console.error("Error registering default settings:", error);
+    throw error;
+  }
+}
 
 async function createWindow() {
-  const storageService = StorageService.getInstance();
+  const storageService = LocalStorage.getInstance();
   const settings = await storageService.getSettings();
   const width = settings.windowWidth ?? 700;
   const height = settings.windowHeight ?? 580;
@@ -53,12 +83,13 @@ async function createWindow() {
 app.setName("Password Manager");
 
 app.whenReady().then(async () => {
-  registerDefaultSettings();
-  registerDefaultDatabase();
+  await LoadDefaultAppSettings();
+  await LoadDatabase();
   registerAppInfoHandlers();
   registerSettingsHandlers();
   registerDatabaseHandlers();
   createMenu();
+
   await createWindow();
 
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {

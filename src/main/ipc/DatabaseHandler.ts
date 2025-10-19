@@ -1,13 +1,11 @@
 import { ipcMain } from "electron";
-import { Password } from "../types/password";
-import { DatabaseFactory } from "../database/DatabaseFactory";
-import { StorageService } from "../services/LocalStorageService";
+import { Password } from "../types/Password";
+import { DatabaseFactory } from "../services/database/providers/DatabaseProviderFactory";
 
-const storageService = StorageService.getInstance();
 
 export function registerDatabaseHandlers() {
   ipcMain.handle("database:getPasswords", async (): Promise<Password[]> => {
-    const db = DatabaseFactory.getDatabaseRepository();
+    const db = DatabaseFactory.getDatabaseProvider();
     const passwords = (await db.getPasswords()) as Password[];
     return passwords ?? [];
   });
@@ -15,7 +13,7 @@ export function registerDatabaseHandlers() {
   ipcMain.handle(
     "database:getPasswordById",
     async (_, id: number): Promise<Password | undefined> => {
-      const db = DatabaseFactory.getDatabaseRepository();
+      const db = DatabaseFactory.getDatabaseProvider();
       const password = await db.getPasswordById(id);
       return password ?? undefined;
     },
@@ -27,7 +25,7 @@ export function registerDatabaseHandlers() {
       _,
       password: Omit<Password, "Id" | "OnCreated" | "OnModified">,
     ): Promise<number> => {
-      const db = DatabaseFactory.getDatabaseRepository();
+      const db = DatabaseFactory.getDatabaseProvider();
       const id = await db.insertPassword(password);
       return id;
     },
@@ -40,7 +38,7 @@ export function registerDatabaseHandlers() {
       id: number,
       password: Partial<Omit<Password, "Id" | "OnCreated" | "OnModified">>,
     ): Promise<void> => {
-      const db = DatabaseFactory.getDatabaseRepository();
+      const db = DatabaseFactory.getDatabaseProvider();
       await db.updatePassword(id, password);
     },
   );
@@ -48,18 +46,18 @@ export function registerDatabaseHandlers() {
   ipcMain.handle(
     "database:deletePassword",
     async (_, id: number): Promise<void> => {
-      const db = DatabaseFactory.getDatabaseRepository();
+      const db = DatabaseFactory.getDatabaseProvider();
       await db.deletePassword(id);
     },
   );
 
   ipcMain.handle("database:close", async (): Promise<void> => {
-    const db = DatabaseFactory.getDatabaseRepository();
+    const db = DatabaseFactory.getDatabaseProvider();
     db.close();
   });
 
   ipcMain.handle("database:change-provider", async (): Promise<void> => {
-    const db = DatabaseFactory.getDatabaseRepository();
+    const db = DatabaseFactory.getDatabaseProvider();
     db.close();
   });
 }

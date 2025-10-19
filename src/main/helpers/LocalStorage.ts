@@ -2,24 +2,11 @@ import storage from "electron-json-storage";
 import { DatabaseConnection } from "../types/DatabaseConnection";
 import { app } from "electron";
 import { join } from "path";
-import { DatabaseProvider } from "../database/DatabaseProvider";
+import { DatabaseProvider } from "../services/database/providers/DatabaseProviders";
+import { AppSettings } from "../types/AppSettings";
 
 const basePath = join(app.getPath("userData"), "storage");
 const dbPath = join(basePath, "password-manager.db");
-
-export interface AppSettings {
-  theme: "light" | "dark";
-  itemsPerPage: number;
-  passwordLength: number;
-  includeNumbers: boolean;
-  includeSymbols: boolean;
-  includeLowercase: boolean;
-  includeUppercase: boolean;
-  defaultdbConnection?: DatabaseConnection;
-  dbConnections?: DatabaseConnection[];
-  windowWidth?: number;
-  windowHeight?: number;
-}
 
 const defaultConnection: DatabaseConnection = {
   id: 1,
@@ -37,15 +24,15 @@ const defaultSettings: AppSettings = {
   includeLowercase: true,
   includeUppercase: true,
   dbConnections: [
-   defaultConnection
+    defaultConnection
   ],
-  defaultdbConnection: defaultConnection,
+  selectedDBConnectionID: 1,
   windowWidth: 700,
   windowHeight: 580,
 };
 
-export class StorageService {
-  private static instance: StorageService;
+export class LocalStorage {
+  private static instance: LocalStorage;
   private readonly SETTINGS_KEY = "app-settings";
 
   constructor(path: string) {
@@ -54,11 +41,11 @@ export class StorageService {
     storage.setDataPath(path);
   }
 
-  static getInstance(): StorageService {
-    if (!StorageService.instance) {
-      StorageService.instance = new StorageService(basePath);
+  static getInstance(): LocalStorage {
+    if (!LocalStorage.instance) {
+      LocalStorage.instance = new LocalStorage(basePath);
     }
-    return StorageService.instance;
+    return LocalStorage.instance;
   }
 
   async getSettings(): Promise<AppSettings> {

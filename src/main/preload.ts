@@ -1,6 +1,5 @@
 import { contextBridge, ipcRenderer } from "electron";
-import { AppSettings } from "./services/LocalStorageService";
-import { join } from "path";
+import { AppSettings } from "./types/AppSettings";
 
 contextBridge.exposeInMainWorld("api", {
   settings: {

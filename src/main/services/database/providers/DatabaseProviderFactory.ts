@@ -1,19 +1,19 @@
-import { DatabaseProvider } from "./DatabaseProvider";
-import { IDatabaseRepository } from "./IDatabaseRepository";
-import { MySQLRepository } from "./MySQLRepository";
-import { SQLiteRepository } from "./SQLiteRepository";
+import { DatabaseProvider } from "./DatabaseProviders";
+import { IDatabaseProvider } from "./IDatabaseProvider";
+import { MySQLProvider } from "./MySQLProvider";
+import { SQLiteProvider } from "./SQLiteProvider";
 
 export class DatabaseFactory {
-  private static dbInstance: IDatabaseRepository;
+  private static dbInstance: IDatabaseProvider;
 
-  static getDatabaseRepository(): IDatabaseRepository {
+  static getDatabaseProvider(): IDatabaseProvider {
     return this.dbInstance;
   }
 
-  static createDatabaseRepository(
+  static createDatabaseProvider(
     dbType: DatabaseProvider,
     connectionString: string
-  ): IDatabaseRepository {
+  ): IDatabaseProvider {
     if (typeof dbType === "string") {
       if (dbType in DatabaseProvider) {
         dbType = DatabaseProvider[dbType as keyof typeof DatabaseProvider];
@@ -23,10 +23,10 @@ export class DatabaseFactory {
     }
     switch (dbType) {
       case DatabaseProvider.SQLite:
-        this.dbInstance = SQLiteRepository.getInstance(connectionString);
+        this.dbInstance = SQLiteProvider.getInstance(connectionString);
         break;
       case DatabaseProvider.MySQL:
-        this.dbInstance = MySQLRepository.getInstance(connectionString);
+        this.dbInstance = MySQLProvider.getInstance(connectionString);
         break;
       default:
         throw new Error(`Unsupported database type: ${dbType}`);
@@ -36,14 +36,14 @@ export class DatabaseFactory {
     return this.dbInstance;
   }
 
-  static handleChangeDatabaseRepository(
+  static onDatabaseProviderChange(
     dbProvider: DatabaseProvider,
     connectionString: string
-  ): IDatabaseRepository {
+  ): IDatabaseProvider {
     if (this.dbInstance) {
       this.dbInstance.close();
     }
-    this.dbInstance = this.createDatabaseRepository(
+    this.dbInstance = this.createDatabaseProvider(
       dbProvider,
       connectionString
     );
