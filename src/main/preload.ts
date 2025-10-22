@@ -1,12 +1,37 @@
 import { contextBridge, ipcRenderer } from "electron";
-import { AppSettings } from "./types/AppSettings";
+import {
+  AppSettings,
+  DBSettings,
+  GUISettings,
+  PasswordGeneratorSettings,
+} from "./types/AppSettings";
 
 contextBridge.exposeInMainWorld("api", {
   settings: {
-    get: (): Promise<AppSettings> => ipcRenderer.invoke("settings:get"),
-    save: (settings: Partial<AppSettings>): Promise<void> =>
-      ipcRenderer.invoke("settings:save", settings),
-    reset: (): Promise<void> => ipcRenderer.invoke("settings:reset"),
+    GUI: {
+      get: (): Promise<GUISettings> =>
+        ipcRenderer
+          .invoke("settings:get")
+          .then((settings: AppSettings) => settings.GUI),
+      save: (settings: Partial<GUISettings>): Promise<void> =>
+        ipcRenderer.invoke("settings:save", { GUI: settings }),
+    },
+    DB: {
+      get: (): Promise<DBSettings> =>
+        ipcRenderer
+          .invoke("settings:get")
+          .then((settings: AppSettings) => settings.DB),
+      save: (settings: Partial<DBSettings>): Promise<void> =>
+        ipcRenderer.invoke("settings:save", { DB: settings }),
+    },
+    PasswordGenerator: {
+      get: (): Promise<PasswordGeneratorSettings> =>
+        ipcRenderer
+          .invoke("settings:get")
+          .then((settings: AppSettings) => settings.PasswordGenerator),
+      save: (settings: Partial<PasswordGeneratorSettings>): Promise<void> =>
+        ipcRenderer.invoke("settings:save", { PasswordGenerator: settings }),
+    },
     openFolderDialog: (): Promise<string | undefined> =>
       ipcRenderer.invoke("settings:open-folder-dialog"),
     joinPaths: (...parts: string[]): Promise<string | undefined> =>

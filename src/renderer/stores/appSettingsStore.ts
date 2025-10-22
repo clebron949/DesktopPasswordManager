@@ -7,21 +7,21 @@ export const useAppStore = defineStore("appStore", () => {
   const currentPage = ref<number>(1);
 
   async function getItemsPerPage() {
-    const settings = await IpcService.getSettings();
+    const settings = await IpcService.getGUISettings();
     return settings.itemsPerPage;
   }
 
   async function setItemsPerPage(itemsPerPage: number) {
-    await IpcService.saveSettings({ itemsPerPage: itemsPerPage });
+    await IpcService.saveGUISettings({ itemsPerPage: itemsPerPage });
   }
 
   async function getDatabaseProviders() {
-    const settings = await IpcService.getSettings();
+    const settings = await IpcService.getDBSettings();
     return settings.dbConnections ?? [];
   }
 
   async function setDatabaseProvider(provider: DatabaseConnection) {
-    const settings = await IpcService.getSettings();
+    const settings = await IpcService.getDBSettings();
     settings.dbConnections = settings.dbConnections || [];
     const index = settings.dbConnections.findIndex(
       (db: DatabaseConnection) => db.id === provider.id
@@ -38,7 +38,7 @@ export const useAppStore = defineStore("appStore", () => {
     } else {
       settings.dbConnections.push(completeProvider);
     }
-    await IpcService.saveSettings(settings);
+    await IpcService.saveDBSettings(settings);
   }
 
   return {

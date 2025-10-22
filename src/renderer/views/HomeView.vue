@@ -23,9 +23,9 @@ onMounted(async () => {
   if (passwordStore.passwords) {
     passwords.value = passwordStore.passwords;
   }
-  const settings = await IpcService.getSettings();
+  const settings = await IpcService.getGUISettings();
   if (settings) {
-    itemsPerPage.value = settings.GUI.itemsPerPage;
+    itemsPerPage.value = settings.itemsPerPage;
   }
   window.api.import.onCompleted(async (e: ImportCompletedData) => {
     passwordStore.initializePasswords().then(() => {

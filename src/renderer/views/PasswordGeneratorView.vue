@@ -11,7 +11,7 @@ const includeNumbers = ref<boolean>();
 const includeSymbols = ref<boolean>();
 
 onMounted(() => {
-  IpcService.getSettings().then((settings) => {
+  IpcService.getPasswordGeneratorSettings().then((settings) => {
     if (settings) {
       passwordLength.value = settings.passwordLength;
       includeLowercase.value = settings.includeLowercase;
@@ -32,7 +32,7 @@ watch(
     includeSymbols,
   ],
   () => {
-    IpcService.saveSettings({
+    IpcService.savePasswordGeneratorSettings({
       passwordLength: passwordLength.value,
       includeLowercase: includeLowercase.value,
       includeUppercase: includeUppercase.value,

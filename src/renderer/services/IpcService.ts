@@ -1,17 +1,29 @@
-import { AppSettings } from "../typings/appSettings";
+import { AppSettings, DBSettings, GUISettings, PasswordGeneratorSettings } from "../typings/appSettings";
 import { Password } from "../typings/password";
 
 export class IpcService {
-  static async getSettings(): Promise<AppSettings> {
-    return await window.api.settings.get();
+  static async getGUISettings(): Promise<GUISettings> {
+    return await window.api.settings.GUI.get();
   }
 
-  static async saveSettings(settings: Partial<AppSettings>): Promise<void> {
-    return await window.api.settings.save(settings);
+  static async saveGUISettings(settings: Partial<GUISettings>): Promise<void> {
+    return await window.api.settings.GUI.save(settings);
   }
 
-  static async resetSettings(): Promise<void> {
-    return await window.api.settings.reset();
+  static async getDBSettings(): Promise<DBSettings> {
+    return await window.api.settings.DB.get();
+  }
+
+  static async saveDBSettings(settings: Partial<DBSettings>): Promise<void> {
+    return await window.api.settings.DB.save(settings);
+  }
+
+  static async getPasswordGeneratorSettings(): Promise<PasswordGeneratorSettings> {
+    return await window.api.settings.PasswordGenerator.get();
+  }
+
+  static async savePasswordGeneratorSettings(settings: Partial<PasswordGeneratorSettings>): Promise<void> {
+    return await window.api.settings.PasswordGenerator.save(settings);
   }
 }
 

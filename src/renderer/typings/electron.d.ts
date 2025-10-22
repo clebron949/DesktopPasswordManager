@@ -1,4 +1,4 @@
-import { AppSettings } from "./appSettings";
+import { AppSettings, DBSettings, GUISettings, PasswordGeneratorSettings } from "./appSettings";
 import { ImportCompletedData } from "./imports";
 import { Password } from "./password";
 
@@ -7,9 +7,18 @@ import { Password } from "./password";
  */
 export default interface API {
   settings: {
-    get(): Promise<AppSettings>;
-    save(settings: Partial<AppSettings>): Promise<void>;
-    reset(): Promise<void>;
+    GUI:{
+      get(): Promise<GUISettings>;
+      save(settings: Partial<GUISettings>): Promise<void>;
+    },
+    DB: {
+      get(): Promise<DBSettings>;
+      save(settings: Partial<DBSettings>): Promise<void>;
+    },
+    PasswordGenerator:{
+      get(): Promise<PasswordGeneratorSettings>;
+      save(settings: Partial<PasswordGeneratorSettings>): Promise<void>;
+    },
     openFolderDialog(): Promise<string | undefined>;
     joinPaths(...parts: string[]): Promise<string | undefined>;
   };
