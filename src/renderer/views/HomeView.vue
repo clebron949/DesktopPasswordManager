@@ -34,7 +34,6 @@ onMounted(async () => {
       }
     });
   });
-  console.log("Passwords initialized with count:", passwordCount.value);
 });
 
 onUnmounted(() => {

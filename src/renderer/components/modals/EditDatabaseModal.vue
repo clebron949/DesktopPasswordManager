@@ -51,7 +51,7 @@ const handleSave = () => {
     form.value.dbType !== "" ||
     form.value.connectionString !== ""
   ) {
-    console.log("Saving Database:", JSON.stringify(form.value, null, 2));
+    // console.log("Saving Database:", JSON.stringify(form.value, null, 2));
     emit("save", form.value);
   } else {
     emit("cancel");

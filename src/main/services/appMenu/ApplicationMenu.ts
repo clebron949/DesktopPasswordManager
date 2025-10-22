@@ -59,8 +59,6 @@ export async function createMenu() {
         createMenu(); // Rebuild menu to update checkmarks
       },
     }));
-  // log current path
-  console.log("Current Path:", app.getAppPath());
   const template: Electron.MenuItemConstructorOptions[] = [
     {
       label: "File",

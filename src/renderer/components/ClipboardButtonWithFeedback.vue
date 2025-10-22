@@ -47,7 +47,6 @@ const copyToClipboard = async () => {
       throw new Error("Text to copy cannot be empty.");
     }
     await navigator.clipboard.writeText(props.textToCopy);
-    console.log("Text copied successfully:", props.textToCopy);
     copiedMessageVisible.value = true;
     messageTimeout = setTimeout(() => {
       copiedMessageVisible.value = false;

@@ -52,7 +52,7 @@ function handleSave(updatedDatabase: DatabaseConnection) {
   appStore.setDatabaseProvider(updatedDatabase).catch((error) => {
     console.error("Error saving database provider:", error);
   });
-  console.log("Saving database:", JSON.stringify(updatedDatabase, null, 2));
+  // console.log("Saving database:", JSON.stringify(updatedDatabase, null, 2));
   isModalOpen.value = false;
 }
 

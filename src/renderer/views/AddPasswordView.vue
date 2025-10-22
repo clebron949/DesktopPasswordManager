@@ -93,7 +93,6 @@ const handleSavePassword = async () => {
         IsPinned: localPassword.value.IsPinned,
         OnCreated: localPassword.value.OnCreated,
       });
-      console.log("Password updated successfully");
       // Refresh the passwords list in store
       await passwordStore.initializePasswords();
       router.push("/");
@@ -106,7 +105,6 @@ const handleSavePassword = async () => {
         Url: localPassword.value.Url,
         IsPinned: localPassword.value.IsPinned,
       });
-      console.log("New password added successfully");
       // Refresh the passwords list in store
       await passwordStore.initializePasswords();
       router.push("/");
@@ -117,12 +115,9 @@ const handleSavePassword = async () => {
 };
 
 const handleConfirmDelete = async () => {
-  console.log("Delete Confirmed!");
   console.log("Deleting password with ID:", localPassword.value.Id);
   try {
     await passwordStore.deletePassword(localPassword.value.Id);
-    console.log("Password deleted!");
-    // Refresh the passwords list in store
     await passwordStore.initializePasswords();
     router.push("/");
   } catch (error) {
@@ -132,7 +127,6 @@ const handleConfirmDelete = async () => {
 };
 
 const handleCancelDelete = () => {
-  console.log("Delete Cancelled.");
   showDeleteConfirmModal.value = false;
 };
 

@@ -8,7 +8,6 @@ export class MySQLProvider implements IDatabaseProvider {
   private db: mysql.Connection | null = null;
 
   constructor(connectionString: string) {
-    console.log("Creating MySQLRepository instance with connection string:", connectionString);
     this.connectionString = connectionString;
   }
 
