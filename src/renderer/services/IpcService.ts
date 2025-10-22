@@ -1,4 +1,4 @@
-import type { AppSettings } from "../../main/services/LocalStorageService";
+import { AppSettings } from "../typings/appSettings";
 import { Password } from "../typings/password";
 
 export class IpcService {

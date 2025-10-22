@@ -16,6 +16,10 @@ export function registerSettingsHandlers() {
     async (_, settings: Partial<AppSettings>): Promise<void> => {
       // Persist settings
       await storageService.saveSettings(settings);
+
+      // Check if database settings were changed
+      const hasDatabaseChange = settings.DB !== undefined;
+
       // Rebuild application menu so newly added/removed DB connections appear immediately
       try {
         await createMenu();
@@ -24,6 +28,17 @@ export function registerSettingsHandlers() {
           "Failed to rebuild application menu after settings save:",
           err
         );
+      }
+
+      // If database settings changed, notify all windows to reload the database
+      if (hasDatabaseChange) {
+        try {
+          BrowserWindow.getAllWindows().forEach((win) =>
+            win.webContents.send("database:reload")
+          );
+        } catch (err) {
+          console.error("Failed to notify renderer to reload database:", err);
+        }
       }
     }
   );

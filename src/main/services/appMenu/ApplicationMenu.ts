@@ -30,8 +30,8 @@ function getMenuItemIcon(baseName: string) {
 export async function createMenu() {
   const storageService = LocalStorage.getInstance();
   const settings: AppSettings = await storageService.getSettings();
-  const dbConnections = settings.dbConnections ?? [];
-  const defaultId = settings.selectedDBConnectionID;
+  const dbConnections = settings.DB.dbConnections ?? [];
+  const defaultId = settings.DB.selectedDBConnectionID;
 
   const connectSubmenu: Electron.MenuItemConstructorOptions[] =
     dbConnections.map((conn) => ({
@@ -41,7 +41,7 @@ export async function createMenu() {
       click: async () => {
         // Update default connection in settings
         console.log("Setting default connection to:", conn.connectionString);
-        await storageService.saveSettings({ selectedDBConnectionID: conn.id });
+        await storageService.saveDatabaseSettings({ selectedDBConnectionID: conn.id });
         // Optionally, notify renderer or reload DB connection here
         const db = DatabaseFactory.getDatabaseProvider();
         await db.close().catch((error) => console.error(error)); // Close current DB connection

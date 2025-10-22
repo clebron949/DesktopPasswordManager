@@ -10,11 +10,12 @@ import { registerDatabaseHandlers } from "./ipc/DatabaseHandler";
 import { registerAppInfoHandlers } from "./ipc/AppInfoHandler";
 import { createMenu } from "./services/appMenu/ApplicationMenu";
 
-
 async function LoadDatabase() {
   const localStorage = LocalStorage.getInstance();
   const settings = await localStorage.getSettings();
-  const dbConnection = settings.dbConnections?.find(db => db.id == settings.selectedDBConnectionID);
+  const dbConnection = settings.DB.dbConnections?.find(
+    (db) => db.id == settings.DB.selectedDBConnectionID
+  );
 
   if (!dbConnection) {
     throw Error("Could not find a defaultDatabaseConnection");
@@ -22,7 +23,7 @@ async function LoadDatabase() {
 
   const db = DatabaseFactory.createDatabaseProvider(
     DatabaseProvider[dbConnection.dbType as keyof typeof DatabaseProvider],
-    dbConnection.connectionString,
+    dbConnection.connectionString
   );
 
   await db.createDatabase();
@@ -32,7 +33,7 @@ async function LoadDefaultAppSettings() {
   try {
     const localStorage = LocalStorage.getInstance();
     if (!existsSync(DefaultAppSettings.storagePath)) {
-      await localStorage.saveSettings(DefaultAppSettings.appSettings)
+      await localStorage.saveSettings(DefaultAppSettings.appSettings);
     }
   } catch (error) {
     console.error("Error registering default settings:", error);
@@ -43,8 +44,8 @@ async function LoadDefaultAppSettings() {
 async function createWindow() {
   const storageService = LocalStorage.getInstance();
   const settings = await storageService.getSettings();
-  const width = settings.windowWidth ?? 700;
-  const height = settings.windowHeight ?? 580;
+  const width = settings.GUI.windowWidth ?? 700;
+  const height = settings.GUI.windowHeight ?? 580;
   const mainWindow = new BrowserWindow({
     width,
     height,
@@ -62,7 +63,7 @@ async function createWindow() {
     // Prevent window from closing immediately
     event.preventDefault();
     storageService
-      .saveSettings({
+      .saveGUISettings({
         windowWidth: winWidth,
         windowHeight: winHeight,
       })

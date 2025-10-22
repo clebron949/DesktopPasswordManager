@@ -4,24 +4,34 @@ import { DatabaseProvider } from "../database/providers/DatabaseProviders";
 import { AppSettings } from "../../types/AppSettings";
 
 const defaultSettings: AppSettings = {
-  theme: "light",
-  itemsPerPage: 5,
-  passwordLength: 12,
-  includeNumbers: true,
-  includeSymbols: true,
-  includeLowercase: true,
-  includeUppercase: true,
-  dbConnections: [
-    {
-      id: 1,
-      name: "Local",
-      dbType: DatabaseProvider[DatabaseProvider.SQLite],
-      connectionString: join(app.getPath("userData"), "storage", "password-manager.db"),
-    }
-  ],
-  selectedDBConnectionID: 1,
-  windowWidth: 700,
-  windowHeight: 580,
+  GUI: {
+    theme: "light",
+    itemsPerPage: 5,
+    windowWidth: 700,
+    windowHeight: 580,
+  },
+  PasswordGenerator: {
+    passwordLength: 12,
+    includeNumbers: true,
+    includeSymbols: true,
+    includeLowercase: true,
+    includeUppercase: true,
+  },
+  DB: {
+    dbConnections: [
+      {
+        id: 1,
+        name: "Local",
+        dbType: DatabaseProvider[DatabaseProvider.SQLite],
+        connectionString: join(
+          app.getPath("userData"),
+          "storage",
+          "password-manager.db"
+        ),
+      },
+    ],
+    selectedDBConnectionID: 1,
+  },
 };
 
 export const DefaultAppSettings = {
@@ -29,4 +39,4 @@ export const DefaultAppSettings = {
   storagePath: join(app.getPath("userData"), "storage", "app-settings.json"),
   dbPath: join(app.getPath("userData"), "storage", "password-manager.db"),
   appSettings: defaultSettings,
-}
+};

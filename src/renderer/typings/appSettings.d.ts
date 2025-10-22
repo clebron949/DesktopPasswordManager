@@ -1,5 +1,4 @@
-import { publicDecrypt } from "crypto";
-import { DatabaseConnection } from "./DatabaseConnection";
+import { DatabaseConnection } from "./database";
 
 export interface AppSettings {
   GUI: GUISettings;

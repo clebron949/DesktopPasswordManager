@@ -1,4 +1,4 @@
-import { AppSettings } from "../../main/services/LocalStorageService";
+import { AppSettings } from "./appSettings";
 import { ImportCompletedData } from "./imports";
 import { Password } from "./password";
 
