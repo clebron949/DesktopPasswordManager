@@ -16,6 +16,8 @@ const passwords = ref<Password[]>([]);
 const searchFilter = ref<string>("");
 const itemsPerPage = ref(5);
 
+const passwordCount = computed(() => passwordStore.passwords?.length || 0);
+
 onMounted(async () => {
   await passwordStore.initializePasswords();
   if (passwordStore.passwords) {
@@ -23,7 +25,7 @@ onMounted(async () => {
   }
   const settings = await IpcService.getSettings();
   if (settings) {
-    itemsPerPage.value = settings.itemsPerPage;
+    itemsPerPage.value = settings.GUI.itemsPerPage;
   }
   window.api.import.onCompleted(async (e: ImportCompletedData) => {
     passwordStore.initializePasswords().then(() => {
@@ -32,6 +34,7 @@ onMounted(async () => {
       }
     });
   });
+  console.log("Passwords initialized with count:", passwordCount.value);
 });
 
 onUnmounted(() => {
@@ -77,7 +80,7 @@ function UpdateCurrentPage(page: number, items: number) {
     </div>
     <div>
       <TablePagination
-        :length="passwords.length"
+        :length="passwordCount"
         @on-page-change="UpdateCurrentPage"
       />
     </div>
